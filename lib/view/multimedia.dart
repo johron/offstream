@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:offstream/component/audio_controls.dart';
-import 'package:offstream/component/player_progress.dart';
+import 'package:offstream/component/playback_controls.dart';
+import 'package:offstream/component/playback_progress.dart';
 
 import '../component/song.dart';
 
@@ -24,14 +25,14 @@ class Multimedia extends StatelessWidget {
             ),
             SizedBox(width: 500, child: Column(
                 children: [
-                  AudioControls(),
-                  Expanded(child: PlayerProgress()),
+                  PlaybackControls(),
+                  Expanded(child: PlaybackProgress()),
                 ]
             )),
             Expanded(
               child: Container(
                 alignment: Alignment.centerRight,
-                child: Text("Right"),
+                child: AudioControls(),
               ),
             ),
           ]

@@ -1,35 +1,44 @@
 import 'package:flutter/material.dart';
 
-class AudioControls extends StatelessWidget {
+class AudioControls extends StatefulWidget {
   const AudioControls({super.key});
 
   @override
+  State<AudioControls> createState() => _AudioControlsState();
+}
+
+class _AudioControlsState extends State<AudioControls> {
+  double volume = 1.0;
+  bool muted = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Flex(
-        mainAxisAlignment: MainAxisAlignment.center,
-        direction: Axis.horizontal,
-        children: [
-          IconButton(
-            icon: Icon(Icons.shuffle_rounded),
-            onPressed: () {},
+    return ListTile(
+      leading: IconButton(
+        icon: Icon(muted ? Icons.volume_off_rounded : Icons.volume_up_rounded),
+        onPressed: () {
+          setState(() {
+            muted = !muted;
+          });
+        },
+      ),
+      trailing: Container(
+        width: 100,
+        child: SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            thumbShape: SliderComponentShape.noThumb,
+            overlayShape: SliderComponentShape.noThumb,
           ),
-          IconButton(
-            icon: Icon(Icons.skip_previous_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.play_arrow_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.skip_next_rounded),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.repeat_rounded),
-            onPressed: () {},
-          ),
-        ]
+          child: Slider(
+            value: muted ? 0 : volume,
+            onChanged: (value) {
+              setState(() {
+                volume = value;
+              });
+            },
+          )
+        )
+      )
     );
   }
 }
