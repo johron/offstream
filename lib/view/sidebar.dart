@@ -7,7 +7,7 @@ class Sidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: 350,
       //height: MediaQuery.of(context).size.height,
       color: Colors.grey[900],
       child: Column(
@@ -17,7 +17,6 @@ class Sidebar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 5,
               children: [
-                //Expanded(child: Container()),
                 ElevatedButton(
                   child: Icon(Icons.library_music),
                   onPressed: () {  },

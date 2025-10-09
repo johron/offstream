@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/view/multimedia.dart';
 import 'package:offstream/view/playlists.dart';
 import 'package:offstream/view/variable.dart';
 
@@ -23,28 +24,7 @@ class OffstreamApp extends StatelessWidget {
             mainView,
           ],
         ),
-        bottomNavigationBar: BottomAppBar(
-          height: 100,
-          color: Colors.grey[900],
-          child: Row(children: [
-            Column(children: [Text("test")]),
-            Column(children: [
-              IconButton(
-                icon: Icon(Icons.skip_previous),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.play_arrow),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.skip_next),
-                onPressed: () {},
-              ),
-            ]),
-            Column(children: [Text("test")]),
-          ])
-        )
+        bottomNavigationBar: Multimedia()
       ),
     );
   }
