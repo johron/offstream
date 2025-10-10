@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/component/playlist/song.dart';
 import 'package:offstream/type/playlist_data.dart';
+import 'package:offstream/util/color.dart';
 
 import '../component/rounded.dart';
 
@@ -20,7 +21,7 @@ class PlaylistPage extends StatelessWidget {
       direction: Axis.vertical,
       children: [
         Container(
-          margin: const EdgeInsets.only(top: 50, left: 50),
+          margin: const EdgeInsets.only(top: 30, left: 50),
           child: Flex(
             direction: Axis.horizontal,
             children: [
@@ -48,7 +49,29 @@ class PlaylistPage extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 50),
+        SizedBox(height: 25),
+        Flex(
+          direction: Axis.horizontal,
+          spacing: 5,
+          children: [
+            SizedBox(width: 30),
+            IconButton(
+              icon: Icon(Icons.play_circle, size: 70, color: getToggledColor()),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.shuffle, size: 30, color: Colors.white70),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.push_pin_rounded, size: 30, color: Colors.white70),
+              onPressed: () {},
+            ),
+            //Expanded(child: Container()),
+            SizedBox(width: 30)
+          ],
+        ),
+        SizedBox(height: 25),
         Expanded(child: ListView(
           shrinkWrap: true,
           children: _buildSongList(),
