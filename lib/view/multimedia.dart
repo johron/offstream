@@ -4,7 +4,7 @@ import 'package:offstream/component/audio_controls.dart';
 import 'package:offstream/component/playback_controls.dart';
 import 'package:offstream/component/playback_progress.dart';
 
-import '../component/song.dart';
+import '../component/multimedia/song.dart';
 
 class Multimedia extends StatelessWidget {
   const Multimedia({super.key});

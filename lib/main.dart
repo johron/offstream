@@ -1,27 +1,13 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-import 'package:window_manager/window_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:offstream/util/page.dart';
 
 import 'package:offstream/view/multimedia.dart';
-import 'package:offstream/view/playlist.dart';
+import 'package:offstream/page/playlist_page.dart';
 import 'package:offstream/view/sidebar.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(1200, 700),
-    minimumSize: Size(1000, 600),
-    center: true,
-    title: "Offstream",
-  );
-
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
-
   runApp(const OffstreamApp());
 }
 
@@ -33,6 +19,8 @@ class OffstreamApp extends StatefulWidget {
 }
 
 class _OffstreamAppState extends State<OffstreamApp> {
+  OPage _selectedPage = OPage(Pages.library, null);
+
   @override
   Widget build(BuildContext context) {
     const String appTitle = 'Offstream';
@@ -44,12 +32,35 @@ class _OffstreamAppState extends State<OffstreamApp> {
         body: Flex(
           direction: Axis.horizontal,
           children: [
-            Sidebar(),
-            Playlist(),
+            Sidebar(
+              initialPage: _selectedPage,
+              onPageSelected: (page) {
+                setState(() {
+                  _selectedPage = page;
+                });
+              },
+            ),
+            Expanded(child: Container(
+              child: _buildPageContent(),
+            )),
           ],
         ),
         bottomNavigationBar: Multimedia()
       ),
     );
+  }
+
+  Widget _buildPageContent() {
+    // Return different widgets based on selected page
+    switch (_selectedPage.page) {
+      case Pages.library:
+        return Text('Library Content');
+      case Pages.search:
+        return Text('Search Content');
+      case Pages.settings:
+        return Text('Settings Content');
+      case Pages.playlist:
+        return PlaylistPage();
+    }
   }
 }

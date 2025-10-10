@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/view/sidebar.dart';
 
-class Playlist extends StatelessWidget {
-  const Playlist({super.key});
+class PlaylistPage extends StatelessWidget {
+  const PlaylistPage({super.key});
 
   @override
   Widget build(BuildContext context) {
