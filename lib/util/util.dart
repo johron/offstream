@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:offstream/type/playlist_data.dart';
 import 'package:offstream/type/song_data.dart';
 
@@ -21,4 +23,18 @@ PlaylistData getSamplePlaylist() {
 
 String getPlaylistPath(PlaylistData playlist) {
   return '${playlist.repo}/${playlist.title}';
+}
+
+double calculateTitleFontSize(String title) {
+  int length = title.length;
+
+  if (length <= 10) {
+    // For titles with 10 or fewer characters
+    // Scale up to maximum of 80 for shorter titles
+    return 72 + (10 - length) * 0.8; // 0.8 = (80-72)/10
+  } else {
+    // For titles longer than 10 characters
+    // Scale down as length increases
+    return math.max(30.0, 72 - (length - 10) * 2);
+  }
 }

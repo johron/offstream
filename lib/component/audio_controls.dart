@@ -44,33 +44,5 @@ class _AudioControlsState extends State<AudioControls> {
         ),
       ],
     );
-
-    return ListTile(
-      leading: IconButton(
-        icon: Icon(muted ? Icons.volume_off_rounded : Icons.volume_up_rounded),
-        onPressed: () {
-          setState(() {
-            muted = !muted;
-          });
-        },
-      ),
-      trailing: SizedBox(
-        width: 100,
-        child: SliderTheme(
-          data: SliderTheme.of(context).copyWith(
-            thumbShape: SliderComponentShape.noThumb,
-            overlayShape: SliderComponentShape.noThumb,
-          ),
-          child: Slider(
-            value: muted ? 0 : volume,
-            onChanged: (value) {
-              setState(() {
-                volume = value;
-              });
-            },
-          )
-        )
-      )
-    );
   }
 }

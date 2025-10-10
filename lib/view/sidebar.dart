@@ -4,6 +4,7 @@ import 'package:offstream/component/sidebar/playlist.dart';
 import 'package:offstream/type/page.dart';
 import 'package:offstream/util/util.dart';
 
+import '../component/rounded.dart';
 import '../type/playlist_data.dart';
 
 class Sidebar extends StatefulWidget {
@@ -75,10 +76,21 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
-  List<Playlist> getPlaylists() {
+  List<ListTile> getPlaylists() {
     PlaylistData data = getSamplePlaylist();
+
+    var iconPath = data.iconPath;
+    if (iconPath == null || iconPath.isEmpty) {
+      iconPath = 'https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999';
+    }
+
     return [
-      Playlist(data: data, onSelected: (bool value) => _changePage(OPage(Pages.playlist, getPlaylistPath(data)))),
+      ListTile(
+        leading: Rounded(child: Image.network(iconPath, scale: 5)),
+        title: Text(data.title),
+        selected: selectedPage.page == Pages.playlist && selectedPage.playlistPath == getPlaylistPath(data),
+        onTap: () => _changePage(OPage(Pages.playlist, getPlaylistPath(data)))
+      )
     ];
   }
 }
