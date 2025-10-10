@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:offstream/view/playlists.dart';
+import 'package:offstream/view/playlist.dart';
 
 import 'package:offstream/main.dart';
 

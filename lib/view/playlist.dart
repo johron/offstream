@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/view/sidebar.dart';
 
-class Playlists extends StatelessWidget {
-  const Playlists({super.key});
+class Playlist extends StatelessWidget {
+  const Playlist({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Container(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -18,6 +19,7 @@ class Playlists extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ]
+      ),
     );
   }
 }
