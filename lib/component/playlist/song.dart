@@ -12,12 +12,9 @@ class Song extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //return ListTile(
-    //  leading: Rounded(child: Image.network(data.albumArtPath ?? "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999")),
-    //  title: Text(data.title),
-    //  subtitle: Text(data.artist),
-    //);
-    return Container(
+    return Text("ok");
+
+    /*return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       child: Row(
         children: [
@@ -52,6 +49,10 @@ class Song extends StatelessWidget {
                 style: TextStyle(color: Colors.white70),
               ),
               Text(
+                formatDateTime(data.addedAt),
+                style: TextStyle(color: Colors.white70),
+              ),
+              Text(
                   formatDuration(data.duration),
                   style: TextStyle(color: Colors.white70)
               ),
@@ -59,6 +60,6 @@ class Song extends StatelessWidget {
           ))
         ],
       ),
-    );
+    );*/
   }
 }

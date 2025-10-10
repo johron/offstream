@@ -4,6 +4,8 @@ import 'package:offstream/type/playlist_data.dart';
 import 'package:offstream/util/color.dart';
 
 import '../component/rounded.dart';
+import '../type/song_data.dart';
+import '../util/time.dart';
 
 // The API/util is going to return a playlist object which has all the data and ill just display it here, and give an example playlist object before i actually implement git fetching of it form internet and local
 
@@ -71,21 +73,55 @@ class PlaylistPage extends StatelessWidget {
             SizedBox(width: 30)
           ],
         ),
-        SizedBox(height: 25),
+        //SizedBox(height: 25),
         Expanded(child: ListView(
           shrinkWrap: true,
-          children: _buildSongList(),
+          children: [DataTable(
+            columns: [
+              DataColumn(label: Text('#', style: TextStyle(color: Colors.white70))),
+              DataColumn(label: Text('Title', style: TextStyle(color: Colors.white70))),
+              DataColumn(label: Text('Album', style: TextStyle(color: Colors.white70))),
+              DataColumn(label: Text('Date Added', style: TextStyle(color: Colors.white70))),
+              DataColumn(label: Icon(Icons.access_time, color: Colors.white70, size: 20)),
+            ],
+            rows: _buildSongRows(),
+          ),
+          ]
         )),
       ],
     );
   }
 
-  List<StatelessWidget> _buildSongList() {
-    List<StatelessWidget> songWidgets = [];
-    for (var song in playlist.songs) {
-      songWidgets.add(Song(data: song, index: playlist.songs.indexOf(song)));
+  List<DataRow> _buildSongRows() {
+    List<DataRow> rows = [];
+    for (SongData data in playlist.songs) {
+      rows.add(DataRow(cells: [
+        DataCell(Text('${playlist.songs.indexOf(data) + 1}', style: TextStyle(color: Colors.white70))),
+        DataCell(
+          Row(
+            children: [
+              Rounded(
+                radius: 5,
+                child: Image.network(
+                  data.albumArtPath ??
+                      "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999",
+                  width: 35,
+                  height: 35,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(width: 10),
+              Text(data.title, style: TextStyle(color: Colors.white70)),
+            ],
+          )
+        ),
+        DataCell(Text(data.album, style: TextStyle(color: Colors.white70))),
+        DataCell(Text(formatDateTime(data.addedAt), style: TextStyle(color: Colors.white70))),
+        DataCell(Text(formatDuration(data.duration), style: TextStyle(color: Colors.white70))),
+      ]));
     }
-    return songWidgets;
+
+    return rows;
   }
 }
 
