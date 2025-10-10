@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/api/playback.dart';
 import 'package:offstream/util/color.dart';
 import 'package:offstream/util/color.dart';
 
@@ -10,9 +11,19 @@ class PlaybackControls extends StatefulWidget {
 }
 
 class _PlaybackControlsState extends State<PlaybackControls> {
+  final PlaybackController _controller = PlaybackController();
+
   bool shuffle = false;
   bool playing = false;
   bool repeat = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.onPlaybackStateChanged.listen((state) {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +47,8 @@ class _PlaybackControlsState extends State<PlaybackControls> {
           IconButton(
             icon: playing ? Icon(Icons.pause_rounded) : Icon(Icons.play_arrow_rounded),
             onPressed: () {
+              print("tapped");
+              _controller.togglePlayPause();
               setState(() {
                 playing = !playing;
               });
