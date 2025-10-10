@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 
-class Playlist extends StatefulWidget {
-  final String title;
-  final IconData icon;
-  final String repo;
+import '../../type/playlist_data.dart';
+import '../rounded.dart';
 
+class Playlist extends StatefulWidget {
+  final PlaylistData data;
   final ValueChanged<bool> onSelected;
   final bool selected;
 
   const Playlist({
     super.key,
-    required this.title,
-    required this.icon,
-    required this.repo,
+    required this.data,
     required this.onSelected,
     this.selected = false,
   });
@@ -22,34 +20,34 @@ class Playlist extends StatefulWidget {
 }
 
 class _PlaylistState extends State<Playlist> {
-  late String title;
-  late IconData icon;
-  late String repo;
-
+  late PlaylistData data;
   late bool selected;
 
   @override
   void initState() {
     super.initState();
-    title = widget.title;
-    icon = widget.icon;
-    repo = widget.repo;
+    data = widget.data;
     selected = widget.selected;
   }
 
   void _toggleSelected() {
     setState(() {
-      selected = !selected;
+      selected = true;
     });
     widget.onSelected(selected);
   }
 
   @override
   Widget build(BuildContext context) {
+    var iconPath = data.iconPath;
+    if (iconPath == null || iconPath.isEmpty) {
+      iconPath = 'https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999';
+    }
+
     return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      subtitle: Text(repo),
+      leading: Rounded(child: Image.network(iconPath, scale: 5)),
+      title: Text(data.title),
+      selected: selected,
       onTap: () => _toggleSelected(),
     );
   }

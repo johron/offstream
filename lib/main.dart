@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:offstream/util/page.dart';
+import 'package:offstream/type/page.dart';
+import 'package:offstream/type/playlist_data.dart';
+import 'package:offstream/type/song_data.dart';
+import 'package:offstream/util/util.dart';
 
 import 'package:offstream/view/multimedia.dart';
 import 'package:offstream/page/playlist_page.dart';
@@ -60,7 +63,13 @@ class _OffstreamAppState extends State<OffstreamApp> {
       case Pages.settings:
         return Text('Settings Content');
       case Pages.playlist:
-        return PlaylistPage();
+        if (_selectedPage.playlistPath == null) {
+          return Text('No playlist selected');
+        }
+
+        return PlaylistPage(
+          playlist: getSamplePlaylist(),
+        );
     }
   }
 }

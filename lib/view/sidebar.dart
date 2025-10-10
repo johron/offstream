@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:offstream/component/sidebar/playlist.dart';
-import 'package:offstream/util/page.dart';
+import 'package:offstream/type/page.dart';
+import 'package:offstream/util/util.dart';
+
+import '../type/playlist_data.dart';
 
 class Sidebar extends StatefulWidget {
   final ValueChanged<OPage>? onPageSelected;
@@ -30,7 +33,6 @@ class _SidebarState extends State<Sidebar> {
     setState(() {
       selectedPage = page;
     });
-    // Notify parent widget about the page change
     widget.onPageSelected?.call(selectedPage);
   }
 
@@ -64,6 +66,7 @@ class _SidebarState extends State<Sidebar> {
           Divider(color: Colors.grey[700]),
           Expanded(
             child: ListView(
+              shrinkWrap: true,
               children: getPlaylists(),
             ),
           ),
@@ -73,10 +76,9 @@ class _SidebarState extends State<Sidebar> {
   }
 
   List<Playlist> getPlaylists() {
+    PlaylistData data = getSamplePlaylist();
     return [
-      Playlist(title: "Playlist 1", icon: Icons.sunny_snowing, repo: "github.com/example/offstream", onSelected: (bool value) => _changePage(OPage(Pages.playlist, "playlist1"))),
-      Playlist(title: "Playlist 2", icon: Icons.sunny_snowing, repo: "gitlab.com/example/offstream", onSelected: (bool value) => _changePage(OPage(Pages.playlist, "playlist2"))),
-      Playlist(title: "Playlist 3", icon: Icons.sunny_snowing, repo: "git.example.com/offstream", onSelected: (bool value) => _changePage(OPage(Pages.playlist, "playlist3"))),
+      Playlist(data: data, onSelected: (bool value) => _changePage(OPage(Pages.playlist, getPlaylistPath(data)))),
     ];
   }
 }
