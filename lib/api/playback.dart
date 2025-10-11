@@ -83,6 +83,9 @@ class PlaybackController {
   void seek(Duration position) {
     _position = position;
     _positionController.add(_position);
+
+    _player.seek(position);
+
     print("Seeking to position: $_position");
   }
 
@@ -95,7 +98,7 @@ class PlaybackController {
 
     seek(Duration.zero);
 
-    _player.setUrl("https://file-examples.com/storage/fe2b352ea268ea149938125/2017/11/file_example_MP3_700KB.mp3");
+    _player.setUrl("https://dn720308.ca.archive.org/0/items/dio_holy_diver/02%20-%20Dio%20-%20Holy%20Diver.mp3");
 
     print("Changing current song to: ${song.title}");
   }

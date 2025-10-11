@@ -6,7 +6,10 @@ import 'package:offstream/view/multimedia.dart';
 import 'package:offstream/page/playlist_page.dart';
 import 'package:offstream/view/sidebar.dart';
 
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
+
 void main() async {
+  JustAudioMediaKit.ensureInitialized();
   runApp(const OffstreamApp());
 }
 

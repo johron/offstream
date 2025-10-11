@@ -8,6 +8,14 @@ PlaylistData getSamplePlaylist() {
     repo: 'github.com/user/offstream',
     title: 'Playlist 1',
     songs: [
+      SongData(
+        title: "Holy Diver",
+        artist: "Dio",
+        album: "Holy Diver",
+        albumArtPath: "https://m.media-amazon.com/images/I/81exki0oztL._UF1000,1000_QL80_.jpg",
+        addedAt: DateTime(1983, 5, 25),
+        duration: Duration(minutes: 5, seconds: 52),
+      ),
       getSampleSong(1),
       getSampleSong(2),
       getSampleSong(3),
