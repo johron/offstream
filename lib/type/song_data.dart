@@ -3,7 +3,7 @@ class SongData {
   final String artist;
   final String album;
   final Duration duration;
-  final String? albumArtPath;
+  final String albumArtPath;
   final DateTime addedAt;
 
   const SongData({
@@ -12,6 +12,6 @@ class SongData {
     required this.album,
     required this.duration,
     required this.addedAt,
-    this.albumArtPath,
+    required this.albumArtPath,
   });
 }

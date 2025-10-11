@@ -1,13 +1,47 @@
 
 import 'package:flutter/material.dart';
+import 'package:offstream/api/playback.dart';
 import 'package:offstream/component/audio_controls.dart';
-import 'package:offstream/component/playback_controls.dart';
-import 'package:offstream/component/playback_progress.dart';
+import 'package:offstream/component/rounded.dart';
+import 'package:offstream/util/color.dart';
+import 'package:offstream/util/time.dart';
+import 'package:offstream/util/util.dart';
 
-import '../component/multimedia/song.dart';
-
-class Multimedia extends StatelessWidget {
+class Multimedia extends StatefulWidget {
   const Multimedia({super.key});
+
+  @override
+  State<Multimedia> createState() => _MultimediaState();
+}
+
+class _MultimediaState extends State<Multimedia> {
+  final PlaybackController _controller = PlaybackController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.onPlaybackStateChanged.listen((event) {
+      updateState();
+    });
+    _controller.onShuffleChanged.listen((event) {
+      updateState();
+    });
+    _controller.onRepeatChanged.listen((event) {
+      updateState();
+    });
+    _controller.onPositionChanged.listen((event) {
+      updateState();
+    });
+    _controller.onCurrentSongChanged.listen((event) {
+      updateState();
+    });
+
+    updateState();
+  }
+
+  void updateState() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +52,87 @@ class Multimedia extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: Container(
+              child: _controller.currentSong == null ? Container(
                 alignment: Alignment.centerLeft,
-                child: Song(title: "Holy Diver", artist: "Dio", albumArtUrl: "https://upload.wikimedia.org/wikipedia/en/0/08/DioHolyDiver.jpg"),
+                child: ListTile(
+                  leading: Rounded(child: Image.network(getMissingAlbumArtPath())),
+                )) : Container(
+                alignment: Alignment.centerLeft,
+                child: ListTile(
+                  leading: Rounded(child: Image.network(_controller.currentSong!.albumArtPath)),
+                  title: Text(_controller.currentSong!.title),
+                  subtitle: Text(_controller.currentSong!.artist),
+                ),
               ),
             ),
             SizedBox(width: 500, child: Column(
                 children: [
-                  PlaybackControls(),
-                  Expanded(child: PlaybackProgress()),
+                  Flex(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      direction: Axis.horizontal,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.shuffle_rounded),
+                          color: _controller.isShuffling ? getToggledColor() : null,
+                          onPressed: () {
+                            if (_controller.currentSong == null) return;
+                            _controller.shuffle();
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.skip_previous_rounded),
+                          onPressed: () {
+                            if (_controller.currentSong == null) return;
+                            _controller.previous();
+                          },
+                        ),
+                        IconButton(
+                          icon: _controller.state == PlaybackState.playing ? Icon(Icons.pause_rounded) : Icon(Icons.play_arrow_rounded),
+                          onPressed: () {
+                            if (_controller.currentSong == null) return;
+                            _controller.play();
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.skip_next_rounded),
+                          onPressed: () {
+                            if (_controller.currentSong == null) return;
+                            _controller.next();
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.repeat_rounded),
+                          color: _controller.isRepeating ? getToggledColor() : null,
+                          onPressed: () {
+                            if (_controller.currentSong == null) return;
+                            _controller.repeat();
+                          },
+                        ),
+                      ]
+                  ),
+                  Expanded(child: Flex(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    direction: Axis.horizontal,
+                    spacing: 10,
+                    children: [
+                      Text(formatDuration(_controller.position)),
+                      Expanded(child: SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            thumbShape: SliderComponentShape.noThumb,
+                            overlayShape: SliderComponentShape.noThumb,
+                          ),
+                          child: Slider(
+                            value: _controller.currentSong == null ? 0 : _controller.position.inSeconds/_controller.currentSong!.duration.inSeconds,
+                            onChanged: (value) {
+                              if (_controller.currentSong == null) return;
+                              _controller.seek(multiplyDuration(_controller.currentSong!.duration, value));
+                            },
+                          )
+                      )
+                      ),
+                      Text(formatDuration(_controller.currentSong == null ? Duration.zero : _controller.currentSong!.duration)),
+                    ],
+                  )),
                 ]
             )),
             Expanded(

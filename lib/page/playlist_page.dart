@@ -9,15 +9,28 @@ import '../type/song_data.dart';
 import '../util/time.dart';
 import '../util/util.dart';
 
-// The API/util is going to return a playlist object which has all the data and ill just display it here, and give an example playlist object before i actually implement git fetching of it form internet and local
-
-class PlaylistPage extends StatelessWidget {
+class PlaylistPage extends StatefulWidget {
   final PlaylistData playlist;
 
   const PlaylistPage({
     required this.playlist,
     super.key
   });
+
+  @override
+  State<PlaylistPage> createState() => _PlaylistPageState();
+}
+
+class _PlaylistPageState extends State<PlaylistPage> {
+  late PlaylistData playlist;
+
+  final PlaybackController _controller = PlaybackController();
+
+  @override
+  void initState() {
+    super.initState();
+    playlist = widget.playlist;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +134,7 @@ class PlaylistPage extends StatelessWidget {
                 child: IndexAndPlay(
                   index: playlist.songs.indexOf(data),
                   onPlay: () {
-                    print('Requesting to play ${data.title}');
+                    _controller.song(data);
                   }
                 )
               ),
@@ -129,8 +142,7 @@ class PlaylistPage extends StatelessWidget {
               Rounded(
                 radius: 5,
                 child: Image.network(
-                  data.albumArtPath ??
-                      "https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999",
+                  data.albumArtPath,
                   width: 35,
                   height: 35,
                   fit: BoxFit.cover,
