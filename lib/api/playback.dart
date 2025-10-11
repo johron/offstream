@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:offstream/type/playlist_data.dart';
 import 'package:offstream/type/song_data.dart';
 
+import 'package:just_audio/just_audio.dart';
+
 enum PlaybackState {
   playing,
   paused,
@@ -17,6 +19,8 @@ class PlaybackController {
   static final PlaybackController _instance = PlaybackController._internal();
 
   factory PlaybackController() => _instance;
+
+  final AudioPlayer _player = AudioPlayer();
 
   PlaybackState _state = PlaybackState.stopped;
   bool _shuffle = false;
@@ -47,8 +51,10 @@ class PlaybackController {
   void play() {
     if (_state == PlaybackState.playing) {
       _state = PlaybackState.paused;
+      _player.pause();
     } else {
       _state = PlaybackState.playing;
+      _player.play();
     }
     _playbackStateController.add(_state);
     print("Toggling playback: $_state");
@@ -89,6 +95,17 @@ class PlaybackController {
 
     seek(Duration.zero);
 
+    _player.setUrl("https://file-examples.com/storage/fe2b352ea268ea149938125/2017/11/file_example_MP3_700KB.mp3");
+
     print("Changing current song to: ${song.title}");
+  }
+
+  void dispose() {
+    _playbackStateController.close();
+    _currentSongController.close();
+    _currentPlaylistController.close();
+    _shuffleController.close();
+    _repeatController.close();
+    _positionController.close();
   }
 }

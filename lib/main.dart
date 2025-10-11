@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:offstream/type/page.dart';
 import 'package:offstream/util/util.dart';
