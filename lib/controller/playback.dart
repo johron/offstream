@@ -103,8 +103,8 @@ class PlaybackController {
   }
 
   void song(SongData song) {
-    _player.setFilePath("/home/johron/Downloads/02 - Dio - Holy Diver.mp3");
-    //_player.setUrl("https://dn720308.ca.archive.org/0/items/dio_holy_diver/02%20-%20Dio%20-%20Holy%20Diver.mp3");
+    //_player.setFilePath("/home/johron/Downloads/02 - Dio - Holy Diver.mp3");
+    _player.setUrl("https://dn720308.ca.archive.org/0/items/dio_holy_diver/02%20-%20Dio%20-%20Holy%20Diver.mp3");
 
     _currentSong = song;
     _currentSongController.add(_currentSong);
