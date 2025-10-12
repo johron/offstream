@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/api/playback.dart';
+import 'package:offstream/controller/playback.dart';
 import 'package:offstream/component/index_and_play.dart';
 import 'package:offstream/type/playlist_data.dart';
 import 'package:offstream/util/color.dart';
@@ -62,6 +62,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                       Text(
                           '${playlist.songs.length} ${playlist.songs.length == 1 ? 'song' : 'songs'}',
                           style: TextStyle(fontSize: 16, color: Colors.white70)),
+                      // calculate total duration
                     ],
                   ),
                 ),
