@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:offstream/controller/playback.dart';
-import 'package:offstream/component/audio_controls.dart';
 import 'package:offstream/component/rounded.dart';
 import 'package:offstream/util/color.dart';
 import 'package:offstream/util/time.dart';
