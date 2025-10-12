@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/controller/playback.dart';
 import 'package:offstream/type/page.dart';
 import 'package:offstream/util/util.dart';
 
@@ -10,6 +11,9 @@ import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 
 void main() async {
   JustAudioMediaKit.ensureInitialized();
+
+  PlaybackController().init();
+
   runApp(const OffstreamApp());
 }
 

@@ -27,12 +27,16 @@ class PlaybackController {
   bool _repeat = false;
   Duration _position = Duration.zero;
   SongData? _currentSong;
+  double _volume = 0.7;
+  bool _muted = false;
 
   PlaybackState get state => _state;
   bool get isShuffling => _shuffle;
   bool get isRepeating => _repeat;
   Duration get position => _position;
   SongData? get currentSong => _currentSong;
+  double get currentVolume => _volume;
+  bool get isMuted => _muted;
 
   final _playbackStateController = StreamController<PlaybackState>.broadcast();
   final _currentSongController = StreamController<SongData?>.broadcast();
@@ -40,6 +44,7 @@ class PlaybackController {
   final _shuffleController = StreamController<bool>.broadcast();
   final _repeatController = StreamController<bool>.broadcast();
   final _positionController = StreamController<Duration>.broadcast();
+  final _volumeController = StreamController<double>.broadcast();
 
   Stream<PlaybackState> get onPlaybackStateChanged => _playbackStateController.stream;
   Stream<SongData?> get onCurrentSongChanged => _currentSongController.stream;
@@ -47,6 +52,14 @@ class PlaybackController {
   Stream<bool> get onShuffleChanged => _shuffleController.stream;
   Stream<bool> get onRepeatChanged => _repeatController.stream;
   Stream<Duration> get onPositionChanged => _positionController.stream;
+  Stream<double> get onVolumeChanged => _volumeController.stream;
+
+  void init() {
+    _player.positionStream.listen((pos) {
+      _position = pos;
+      _positionController.add(_position);
+    });
+  }
 
   void play() {
     if (_state == PlaybackState.playing) {
@@ -90,6 +103,9 @@ class PlaybackController {
   }
 
   void song(SongData song) {
+    _player.setFilePath("/home/johron/Downloads/02 - Dio - Holy Diver.mp3");
+    //_player.setUrl("https://dn720308.ca.archive.org/0/items/dio_holy_diver/02%20-%20Dio%20-%20Holy%20Diver.mp3");
+
     _currentSong = song;
     _currentSongController.add(_currentSong);
 
@@ -98,9 +114,28 @@ class PlaybackController {
 
     seek(Duration.zero);
 
-    _player.setUrl("https://dn720308.ca.archive.org/0/items/dio_holy_diver/02%20-%20Dio%20-%20Holy%20Diver.mp3");
+    _player.play();
 
     print("Changing current song to: ${song.title}");
+  }
+
+  void volume(double vol) {
+    _volume = vol;
+    _volumeController.add(_volume);
+
+    _player.setVolume(_volume);
+
+    print("Setting volume to: $_volume");
+  }
+
+  void mute() {
+    _muted = !_muted;
+    if (_muted) {
+      _player.setVolume(0.0);
+    } else {
+      _player.setVolume(_volume);
+    }
+    print("Toggling mute: $_muted");
   }
 
   void dispose() {

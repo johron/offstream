@@ -35,6 +35,9 @@ class _MultimediaState extends State<Multimedia> {
     _controller.onCurrentSongChanged.listen((event) {
       updateState();
     });
+    _controller.onVolumeChanged.listen((event) {
+      updateState();
+    });
 
     updateState();
   }
@@ -138,7 +141,38 @@ class _MultimediaState extends State<Multimedia> {
             Expanded(
               child: Container(
                 alignment: Alignment.centerRight,
-                child: AudioControls(),
+                child: Row(
+                  children: [
+                    Expanded(child: Container()),
+                    IconButton(
+                      icon: Icon(_controller.isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded),
+                      onPressed: () {
+                        setState(() {
+                          _controller.mute();
+                        });
+                      },
+                    ),
+                    Container(
+                        width: 100,
+                        margin: EdgeInsets.only(right: 15),
+                        child: SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              thumbShape: SliderComponentShape.noThumb,
+                              overlayShape: SliderComponentShape.noThumb,
+                            ),
+                            child: Slider(
+                              value: _controller.isMuted ? 0 : _controller.currentVolume,
+                              max: 1,
+                              onChanged: (value) {
+                                setState(() {
+                                  _controller.volume(value);
+                                });
+                              },
+                            )
+                        )
+                    ),
+                  ],
+                ),
               ),
             ),
           ]

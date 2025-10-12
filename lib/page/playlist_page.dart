@@ -150,7 +150,15 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 ),
               ),
               SizedBox(width: 10),
-              Text(data.title, style: TextStyle(color: Colors.white70)),
+              Flex(
+                direction: Axis.vertical,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(data.title, style: TextStyle(color: Colors.white70)),
+                  Text(data.artist, style: TextStyle(color: Colors.white54, fontSize: 12)),
+                ],
+              )
             ],
           )
         ),
