@@ -48,7 +48,7 @@ class _MultimediaState extends State<Multimedia> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      height: 112,
+      height: 100,
       color: Colors.grey[900],
       child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

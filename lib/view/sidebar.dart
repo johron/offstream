@@ -39,7 +39,7 @@ class _SidebarState extends State<Sidebar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 350,
+      width: 250,
       color: Color(0x0AFFFFFF),
       padding: const EdgeInsets.only(left: 5, top: 10, right: 5),
       child: Column(
