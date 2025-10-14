@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/util/util.dart';
 
 import '../../type/playlist_data.dart';
 import '../rounded.dart';
@@ -41,7 +42,7 @@ class _PlaylistState extends State<Playlist> {
   Widget build(BuildContext context) {
       var iconPath = data.iconPath;
       if (iconPath == null || iconPath.isEmpty) {
-        iconPath = 'https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999';
+        iconPath = getMissingAlbumArtPath();
       }
 
       return ListTile(

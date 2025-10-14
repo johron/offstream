@@ -144,11 +144,21 @@ class _MultimediaState extends State<Multimedia> {
                   children: [
                     Expanded(child: Container()),
                     IconButton(
+                      icon: Icon(Icons.mic_external_on_rounded),
+                      onPressed: () {
+                        updateState();
+                      },
+                    ),IconButton(
+                      icon: Icon(Icons.queue_music_rounded),
+                      onPressed: () {
+                        updateState();
+                      },
+                    ),
+                    IconButton(
                       icon: Icon(_controller.isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded),
                       onPressed: () {
-                        setState(() {
-                          _controller.mute();
-                        });
+                        _controller.mute();
+                        updateState();
                       },
                     ),
                     Container(
@@ -163,9 +173,7 @@ class _MultimediaState extends State<Multimedia> {
                               value: _controller.isMuted ? 0 : _controller.currentVolume,
                               max: 1,
                               onChanged: (value) {
-                                setState(() {
                                   _controller.volume(value);
-                                });
                               },
                             )
                         )
