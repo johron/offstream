@@ -2,6 +2,8 @@ package util
 
 import (
 	"os"
+
+	"github.com/goccy/go-json"
 )
 
 func EnsureDataDir() error {
@@ -12,15 +14,21 @@ func EnsureDataDir() error {
 	return nil
 }
 
-func WriteUserFile(username string, content []byte) error {
-	err := EnsureDataDir()
+func WriteUserFile(username string, obj interface{}) error {
+	dataDirErr := EnsureDataDir()
+	if dataDirErr != nil {
+		return dataDirErr
+	}
+
+	content, marshallErr := json.MarshalIndent(obj, "", "  ")
+	if marshallErr != nil {
+		return marshallErr
+	}
+
+	err := os.WriteFile("workspace/users/"+username+".json", content, 0644)
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile("workspace/users/"+username+".toml", content, 0644)
-	if err != nil {
-		return err
-	}
 	return nil
 }

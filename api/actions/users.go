@@ -3,8 +3,6 @@ package actions
 import (
 	"api/util"
 	"fmt"
-
-	"github.com/pelletier/go-toml/v2"
 )
 
 var users []util.User
@@ -19,22 +17,15 @@ func AddUser(username string, password string) util.ActionResponse {
 		}
 	}
 
-	users = append(users, util.User{
+	user := util.User{
 		Username: username,
 		Password: password,
-	})
+	}
+	users = append(users, user)
 
 	fmt.Println(users)
 
-	data, err := toml.Marshal(users)
-	if err != nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "failed to marshal user data",
-		}
-	}
-
-	err = util.WriteUserFile(username, data)
+	err := util.WriteUserFile(username, user)
 	if err != nil {
 		return util.ActionResponse{
 			Success: false,
