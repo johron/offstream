@@ -32,3 +32,19 @@ func WriteUserFile(username string, obj interface{}) error {
 
 	return nil
 }
+
+func ReadUserFile(username string, obj interface{}) error {
+	data, err := os.ReadFile("workspace/users/" + username + ".json")
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(data, obj)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ReadAllUsers() ([]User, error) {

@@ -38,3 +38,7 @@ func AddUser(username string, password string) util.ActionResponse {
 		Message: "user added successfully",
 	}
 }
+
+func GetUsers() []util.User {
+
+}
