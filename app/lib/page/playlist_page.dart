@@ -43,7 +43,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
             direction: Axis.horizontal,
             children: [
               Rounded(radius: 10, child: Image.network(
-                playlist.iconPath ?? 'https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999',
+                playlist.iconPath ?? getMissingAlbumArtPath(),
                 width: 150,
                 height: 150,
                 fit: BoxFit.cover,
@@ -70,28 +70,29 @@ class _PlaylistPageState extends State<PlaylistPage> {
             ],
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 25),
         Flex(
           direction: Axis.horizontal,
           spacing: 5,
           children: [
             SizedBox(width: 30),
             IconButton(
-              icon: Icon(Icons.play_circle, size: 60, color: getToggledColor()),
+              icon: Icon(Icons.play_circle, size: 70, color: getToggledColor()),
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.shuffle, size: 25, color: Colors.white70),
+              icon: Icon(Icons.shuffle, size: 30, color: Colors.white70),
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.push_pin_rounded, size: 25, color: Colors.white70),
+              icon: Icon(Icons.push_pin_rounded, size: 30, color: Colors.white70),
               onPressed: () {},
             ),
             //Expanded(child: Container()),
             SizedBox(width: 30)
           ],
         ),
+        //SizedBox(height: 25),
         Expanded(child: ListView(
           shrinkWrap: true,
           children: [DataTable(
