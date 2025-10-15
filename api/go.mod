@@ -3,8 +3,8 @@ module api
 go 1.25
 
 require (
-	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-gonic/gin v1.11.0
+	github.com/pelletier/go-toml v1.9.5
 )
 
 require (
