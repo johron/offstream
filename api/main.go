@@ -15,6 +15,11 @@ type AddUserRequest struct {
 func main() {
 	r := gin.Default()
 
+	err := r.SetTrustedProxies([]string{"127.0.0.1"})
+	if err != nil {
+		return
+	}
+
 	r.POST("/adduser", func(c *gin.Context) {
 		var req AddUserRequest
 
@@ -34,8 +39,8 @@ func main() {
 		})
 	})
 
-	err := r.Run(":8080")
-	if err != nil {
+	err2 := r.Run(":8080")
+	if err2 != nil {
 		return
 	}
 }
