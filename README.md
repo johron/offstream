@@ -8,4 +8,5 @@ y2-dlp, downloading music from youtube
 - Maybe use ffmpeg to play audio on linux, since just_audio is pretty bad on linux it seems
 
 ## InDev Screenshot
-<img width="1266" height="713" alt="image" src="https://github.com/user-attachments/assets/95984118-c9cf-4dc7-81b5-39b44682d00b" />
+<img width="1258" height="816" alt="image" src="https://github.com/user-attachments/assets/065a8d5c-9e99-4ce1-91e6-5a9984839aa7" />
+
