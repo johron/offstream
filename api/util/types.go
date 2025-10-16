@@ -7,6 +7,7 @@ import (
 type ActionResponse struct {
 	Success bool
 	Message string
+	Return  interface{}
 }
 
 type Configuration struct {

@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-var users []util.User
-
 func AddUser(username string, password string) util.ActionResponse {
+	users := GetUsers()
+
 	for _, user := range users {
 		if user.Username == username {
 			return util.ActionResponse{
@@ -18,8 +18,10 @@ func AddUser(username string, password string) util.ActionResponse {
 	}
 
 	user := util.User{
-		Username: username,
-		Password: password,
+		Username:      username,
+		Password:      password,
+		Playlists:     []util.Playlist{},
+		Configuration: util.Configuration{},
 	}
 	users = append(users, user)
 
@@ -40,5 +42,19 @@ func AddUser(username string, password string) util.ActionResponse {
 }
 
 func GetUsers() []util.User {
+	err, users := util.ReadAllUserFiles()
+	if err != nil {
+		return []util.User{}
+	}
 
+	return users
+}
+
+func GetUser(username string) *util.User {
+	err, user := util.ReadUserFile(username)
+	if err != nil {
+		return nil
+	}
+
+	return user
 }
