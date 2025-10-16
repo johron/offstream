@@ -36,6 +36,5 @@ type Duration struct {
 type User struct {
 	Username      string
 	Password      string
-	Playlists     []Playlist
 	Configuration Configuration
 }

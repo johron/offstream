@@ -3,6 +3,7 @@ package actions
 import (
 	"api/util"
 	"fmt"
+	"time"
 )
 
 func AddUser(username string, password string) util.ActionResponse {
@@ -20,7 +21,6 @@ func AddUser(username string, password string) util.ActionResponse {
 	user := util.User{
 		Username:      username,
 		Password:      password,
-		Playlists:     []util.Playlist{},
 		Configuration: util.Configuration{},
 	}
 	users = append(users, user)
@@ -57,4 +57,50 @@ func GetUser(username string) *util.User {
 	}
 
 	return user
+}
+
+func NewPlaylist(user *util.User, playlistName string) *util.Playlist {
+	if PlaylistExists(user.Username, playlistName) {
+		return nil
+	}
+
+	playlist := util.Playlist{
+		Title:   playlistName,
+		Songs:   []util.Song{},
+		Created: time.Now(),
+	}
+
+	err := util.WritePlaylistFile(user.Username, playlistName, playlist)
+	if err != nil {
+		return nil
+	}
+
+	return &playlist
+}
+
+func PlaylistExists(username string, playlistName string) bool {
+	err, _ := util.ReadPlaylistFile(username, playlistName)
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func GetPlaylists(username string) []util.Playlist {
+	err, playlists := util.ReadAllPlaylistFiles(username)
+	if err != nil {
+		return []util.Playlist{}
+	}
+
+	return playlists
+}
+
+func GetPlaylist(username string, playlistName string) *util.Playlist {
+	err, playlist := util.ReadPlaylistFile(username, playlistName)
+	if err != nil {
+		return nil
+	}
+
+	return playlist
 }

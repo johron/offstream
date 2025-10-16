@@ -28,13 +28,11 @@ func (cmd *GetPlaylistsCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	user := actions.GetUser(req.Username)
-	if user == nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+	playlists := actions.GetPlaylists(req.Username)
+	if playlists == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "user not found or no playlists"})
 		return
 	}
-
-	playlists := user.Playlists
 
 	c.JSON(http.StatusOK, gin.H{
 		"playlists": playlists,
