@@ -51,7 +51,6 @@ func (cmd *NewPlaylistCommand) Handle(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message":  "playlist created",
-		"playlist": playlist,
+		"message": "playlist created",
 	})
 }

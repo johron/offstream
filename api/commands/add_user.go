@@ -11,7 +11,7 @@ import (
 type AddUserCommand struct{}
 
 type AddUserRequest struct {
-	AuthKey  string `json:"authKey" binding:"required"`
+	Token    string `json:"token" binding:"required"`
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
@@ -32,7 +32,7 @@ func (cmd *AddUserCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	if req.AuthKey != "SECRET123" {
+	if req.Token != "SECRET123" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid auth key"})
 		return
 	}
@@ -40,8 +40,7 @@ func (cmd *AddUserCommand) Handle(c *gin.Context) {
 	user := actions.AddUser(req.Username, req.Password)
 	if user.Success {
 		c.JSON(http.StatusOK, gin.H{
-			"message":  user.Message,
-			"username": req.Username,
+			"message": user.Message,
 		})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": user.Message})
