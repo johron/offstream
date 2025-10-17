@@ -14,9 +14,10 @@ type Configuration struct {
 }
 
 type Playlist struct {
-	Title   string
-	Songs   []Song
-	Created time.Time
+	Title      string
+	Songs      []Song
+	Created    time.Time
+	LastUpdate time.Time
 }
 
 type Song struct {
@@ -36,5 +37,11 @@ type Duration struct {
 type User struct {
 	Username      string
 	Password      string
+	LastUpdate    time.Time
 	Configuration Configuration
+}
+
+type Poke struct {
+	Playlists []Playlist
+	User      *User
 }
