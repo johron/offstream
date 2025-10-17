@@ -92,9 +92,9 @@
 {
   "timestamp": "integer",
   "message": "updates retrieved successfully",
-  "updates": {
-    "playlists": "playlists[]",
-    "user": "user"
+  "updates*": {
+    "playlists*": "playlists[]",
+    "user*": "user"
   }
 }
 ```
