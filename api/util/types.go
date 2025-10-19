@@ -41,7 +41,14 @@ type User struct {
 	Configuration Configuration
 }
 
-type Poke struct {
+type Workspace struct {
+	Version    string
+	Token      string
+	LastUpdate time.Time
+}
+
+type Data struct {
+	Workspace Workspace
 	Playlists []Playlist
 	User      *User
 }

@@ -2,44 +2,9 @@ package actions
 
 import (
 	"api/util"
-	"encoding/json"
 	"fmt"
 	"time"
 )
-
-func UpdateUser(user *util.User) util.ActionResponse {
-	user.LastUpdate = time.Now()
-
-	err := util.WriteUserFile(user.Username, user)
-	if err != nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "failed to update user file",
-		}
-	}
-
-	return util.ActionResponse{
-		Success: true,
-		Message: "user updated successfully",
-	}
-}
-
-func updatePlaylist(username string, playlist *util.Playlist) util.ActionResponse {
-	playlist.LastUpdate = time.Now()
-
-	err := util.WritePlaylistFile(username, playlist.Title, *playlist)
-	if err != nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "failed to update playlist file",
-		}
-	}
-
-	return util.ActionResponse{
-		Success: true,
-		Message: "playlist updated successfully",
-	}
-}
 
 func AddUser(username string, password string) util.ActionResponse {
 	users := GetUsers()
@@ -95,35 +60,6 @@ func GetUser(username string) *util.User {
 	return user
 }
 
-func NewPlaylist(user *util.User, playlistName string) *util.Playlist {
-	if PlaylistExists(user.Username, playlistName) {
-		return nil
-	}
-
-	playlist := util.Playlist{
-		Title:      playlistName,
-		Songs:      []util.Song{},
-		Created:    time.Now(),
-		LastUpdate: time.Now(),
-	}
-
-	err := util.WritePlaylistFile(user.Username, playlistName, playlist)
-	if err != nil {
-		return nil
-	}
-
-	return &playlist
-}
-
-func PlaylistExists(username string, playlistName string) bool {
-	err, _ := util.ReadPlaylistFile(username, playlistName)
-	if err != nil {
-		return false
-	}
-
-	return true
-}
-
 func GetPlaylists(username string) []util.Playlist {
 	err, playlists := util.ReadAllPlaylistFiles(username)
 	if err != nil {
@@ -131,15 +67,6 @@ func GetPlaylists(username string) []util.Playlist {
 	}
 
 	return playlists
-}
-
-func GetPlaylist(username string, playlistName string) *util.Playlist {
-	err, playlist := util.ReadPlaylistFile(username, playlistName)
-	if err != nil {
-		return nil
-	}
-
-	return playlist
 }
 
 func GetUpdatesSince(username string, since time.Time) util.ActionResponse {
@@ -171,7 +98,7 @@ func GetUpdatesSince(username string, since time.Time) util.ActionResponse {
 		}
 	}
 
-	var poke util.Poke
+	var poke util.Data
 	if userUpdated {
 		poke.User = user
 	}
@@ -179,17 +106,50 @@ func GetUpdatesSince(username string, since time.Time) util.ActionResponse {
 		poke.Playlists = updatedPlaylists
 	}
 
-	content, err := json.Marshal(poke)
-	if err != nil {
+	return util.ActionResponse{
+		Success: true,
+		Message: "updates retrieved successfully",
+		Return:  poke,
+	}
+}
+
+func ApplyUpdates(username string, updates util.Data) util.ActionResponse {
+	user := GetUser(username)
+	if user == nil {
 		return util.ActionResponse{
 			Success: false,
-			Message: "failed to marshal updates",
+			Message: "user not found",
+		}
+	}
+
+	workspaceErr := util.WriteWorkspaceFile(updates.Workspace)
+	if workspaceErr != nil {
+		return util.ActionResponse{
+			Success: false,
+			Message: "failed to write workspace file",
+		}
+	}
+
+	userErr := util.WriteUserFile(username, *user)
+	if userErr != nil {
+		return util.ActionResponse{
+			Success: false,
+			Message: "failed to write user file",
+		}
+	}
+
+	for _, playlist := range updates.Playlists {
+		err := util.WritePlaylistFile(username, playlist.Title, playlist)
+		if err != nil {
+			return util.ActionResponse{
+				Success: false,
+				Message: "failed to write playlist file",
+			}
 		}
 	}
 
 	return util.ActionResponse{
 		Success: true,
-		Message: "updates retrieved successfully",
-		Return:  content,
+		Message: "updates applied successfully",
 	}
 }

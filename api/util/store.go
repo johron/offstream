@@ -8,7 +8,20 @@ import (
 
 const baseDir = "workspace/"
 
+func EnsureWorkspace() error {
+	err := os.MkdirAll(baseDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func EnsureDataDir() error {
+	workspaceErr := EnsureWorkspace()
+	if workspaceErr != nil {
+		return workspaceErr
+	}
+
 	err := os.MkdirAll(baseDir+"users", os.ModePerm)
 	if err != nil {
 		return err
@@ -17,6 +30,11 @@ func EnsureDataDir() error {
 }
 
 func EnsureUserDir(username string) error {
+	workspaceErr := EnsureWorkspace()
+	if workspaceErr != nil {
+		return workspaceErr
+	}
+
 	err := os.MkdirAll(baseDir+"users/"+username, os.ModePerm)
 	if err != nil {
 		return err
@@ -183,4 +201,23 @@ func ReadAllPlaylistFiles(username string) (error, []Playlist) {
 	}
 
 	return nil, objs
+}
+
+func WriteWorkspaceFile(obj interface{}) error {
+	workspaceErr := EnsureWorkspace()
+	if workspaceErr != nil {
+		return workspaceErr
+	}
+
+	content, marshallErr := json.MarshalIndent(obj, "", "  ")
+	if marshallErr != nil {
+		return marshallErr
+	}
+
+	err := os.WriteFile(baseDir+"workspace.json", content, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

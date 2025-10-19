@@ -36,9 +36,9 @@ func (cmd *PokeCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	updates := actions.GetUpdatesSince(user.Username, time.Unix(req.LastUpdate, 0))
+	data := actions.GetUpdatesSince(user.Username, time.Unix(req.LastUpdate, 0))
 	c.JSON(http.StatusOK, gin.H{
-		"updates":   updates,
+		"data":      data.Return,
 		"timestamp": time.Now().Unix(),
 	})
 }
