@@ -221,3 +221,23 @@ func WriteWorkspaceFile(obj interface{}) error {
 
 	return nil
 }
+
+func ReadWorkspaceFile() (error, *Workspace) {
+	workspaceErr := EnsureWorkspace()
+	if workspaceErr != nil {
+		return workspaceErr, nil
+	}
+
+	content, err := os.ReadFile(baseDir + "workspace.json")
+	if err != nil {
+		return err, nil
+	}
+
+	var obj Workspace
+	unmarshallErr := json.Unmarshal(content, &obj)
+	if unmarshallErr != nil {
+		return unmarshallErr, nil
+	}
+
+	return nil, &obj
+}
