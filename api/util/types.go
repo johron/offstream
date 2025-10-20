@@ -41,14 +41,14 @@ type User struct {
 	Configuration Configuration
 }
 
-type Workspace struct {
+type Stream struct {
 	Version    string
 	Token      string
 	LastUpdate time.Time
 }
 
 type Data struct {
-	Workspace Workspace
+	Stream    Stream
 	Playlists []Playlist
 	User      *User
 }

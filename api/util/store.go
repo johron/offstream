@@ -6,9 +6,9 @@ import (
 	"github.com/goccy/go-json"
 )
 
-const baseDir = "workspace/"
+const baseDir = "stream/"
 
-func EnsureWorkspace() error {
+func EnsureStream() error {
 	err := os.MkdirAll(baseDir, os.ModePerm)
 	if err != nil {
 		return err
@@ -17,9 +17,9 @@ func EnsureWorkspace() error {
 }
 
 func EnsureDataDir() error {
-	workspaceErr := EnsureWorkspace()
-	if workspaceErr != nil {
-		return workspaceErr
+	streamErr := EnsureStream()
+	if streamErr != nil {
+		return streamErr
 	}
 
 	err := os.MkdirAll(baseDir+"users", os.ModePerm)
@@ -30,9 +30,9 @@ func EnsureDataDir() error {
 }
 
 func EnsureUserDir(username string) error {
-	workspaceErr := EnsureWorkspace()
-	if workspaceErr != nil {
-		return workspaceErr
+	streamErr := EnsureStream()
+	if streamErr != nil {
+		return streamErr
 	}
 
 	err := os.MkdirAll(baseDir+"users/"+username, os.ModePerm)
@@ -203,10 +203,10 @@ func ReadAllPlaylistFiles(username string) (error, []Playlist) {
 	return nil, objs
 }
 
-func WriteWorkspaceFile(obj interface{}) error {
-	workspaceErr := EnsureWorkspace()
-	if workspaceErr != nil {
-		return workspaceErr
+func WriteStreamFile(obj interface{}) error {
+	streamErr := EnsureStream()
+	if streamErr != nil {
+		return streamErr
 	}
 
 	content, marshallErr := json.MarshalIndent(obj, "", "  ")
@@ -214,7 +214,7 @@ func WriteWorkspaceFile(obj interface{}) error {
 		return marshallErr
 	}
 
-	err := os.WriteFile(baseDir+"workspace.json", content, 0644)
+	err := os.WriteFile(baseDir+"stream.json", content, 0644)
 	if err != nil {
 		return err
 	}
@@ -222,18 +222,18 @@ func WriteWorkspaceFile(obj interface{}) error {
 	return nil
 }
 
-func ReadWorkspaceFile() (error, *Workspace) {
-	workspaceErr := EnsureWorkspace()
-	if workspaceErr != nil {
-		return workspaceErr, nil
+func ReadStreamFile() (error, *Stream) {
+	streamErr := EnsureStream()
+	if streamErr != nil {
+		return streamErr, nil
 	}
 
-	content, err := os.ReadFile(baseDir + "workspace.json")
+	content, err := os.ReadFile(baseDir + "stream.json")
 	if err != nil {
 		return err, nil
 	}
 
-	var obj Workspace
+	var obj Stream
 	unmarshallErr := json.Unmarshal(content, &obj)
 	if unmarshallErr != nil {
 		return unmarshallErr, nil

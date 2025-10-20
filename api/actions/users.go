@@ -122,11 +122,11 @@ func ApplyUpdates(username string, updates util.Data) util.ActionResponse {
 		}
 	}
 
-	workspaceErr := util.WriteWorkspaceFile(updates.Workspace)
-	if workspaceErr != nil {
+	streamErr := util.WriteStreamFile(updates.Stream)
+	if streamErr != nil {
 		return util.ActionResponse{
 			Success: false,
-			Message: "failed to write workspace file",
+			Message: "failed to write stream file",
 		}
 	}
 

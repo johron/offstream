@@ -3,7 +3,6 @@ package commands
 import (
 	"api/actions"
 	"api/constants"
-
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -32,9 +31,9 @@ func (cmd *InitCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	workspace := actions.GetWorkspace()
-	if workspace.Success {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "workspace already initialized"})
+	stream := actions.GetStream()
+	if stream.Success {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "stream already initialized"})
 		return
 	}
 
@@ -43,11 +42,11 @@ func (cmd *InitCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	result := actions.InitWorkspace(req.Version, req.Token)
+	result := actions.InitStream(req.Version, req.Token)
 	if !result.Success {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Message})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "workspace initialized successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "stream initialized successfully"})
 }
