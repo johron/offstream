@@ -3,6 +3,7 @@ package commands
 import (
 	"api/actions"
 	"api/constants"
+	"api/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -45,6 +46,12 @@ func (cmd *InitCommand) Handle(c *gin.Context) {
 	result := actions.InitStream(req.Version, req.Token)
 	if !result.Success {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Message})
+		return
+	}
+
+	err := util.GitInit()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to initialize git repository"})
 		return
 	}
 

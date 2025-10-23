@@ -49,5 +49,11 @@ func (cmd *PushCommand) Handle(c *gin.Context) {
 		return
 	}
 
+	err := util.GitCommitAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to commit changes"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"message": "updates applied successfully"})
 }

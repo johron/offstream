@@ -41,3 +41,44 @@ func InitStream(version string, token string) util.ActionResponse {
 		Message: "stream initialized successfully",
 	}
 }
+
+func ApplyUpdates(username string, updates util.Data) util.ActionResponse {
+	user := GetUser(username)
+	if user == nil {
+		return util.ActionResponse{
+			Success: false,
+			Message: "user not found",
+		}
+	}
+
+	streamErr := util.WriteStreamFile(updates.Stream)
+	if streamErr != nil {
+		return util.ActionResponse{
+			Success: false,
+			Message: "failed to write stream file",
+		}
+	}
+
+	userErr := util.WriteUserFile(username, *user)
+	if userErr != nil {
+		return util.ActionResponse{
+			Success: false,
+			Message: "failed to write user file",
+		}
+	}
+
+	for _, playlist := range updates.Playlists {
+		err := util.WritePlaylistFile(username, playlist.Title, playlist)
+		if err != nil {
+			return util.ActionResponse{
+				Success: false,
+				Message: "failed to write playlist file",
+			}
+		}
+	}
+
+	return util.ActionResponse{
+		Success: true,
+		Message: "updates applied successfully",
+	}
+}

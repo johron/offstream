@@ -1,6 +1,9 @@
 # Stream API
 - Server API for the Offstream client
 
+## Todo
+- Should use a secondary repo that is written to and then that is pushed to the main repo so things can merge properly, not just overwrite
+
 ## Documentation (Unfinished)
 - `*` indicates optional fields
 
