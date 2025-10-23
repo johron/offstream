@@ -36,6 +36,14 @@ func AddUser(username string, password string) util.ActionResponse {
 		}
 	}
 
+	err = util.GitCommitAll()
+	if err != nil {
+		return util.ActionResponse{
+			Success: false,
+			Message: "failed to commit changes" + err.Error(),
+		}
+	}
+
 	return util.ActionResponse{
 		Success: true,
 		Message: "user added successfully",

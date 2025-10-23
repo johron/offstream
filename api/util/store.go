@@ -6,7 +6,7 @@ import (
 	"github.com/goccy/go-json"
 )
 
-const baseDir = "stream/"
+const baseDir = "stream/write/"
 
 func EnsureStream() error {
 	err := os.MkdirAll(baseDir, os.ModePerm)

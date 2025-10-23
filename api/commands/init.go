@@ -51,7 +51,13 @@ func (cmd *InitCommand) Handle(c *gin.Context) {
 
 	err := util.GitInit()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to initialize git repository"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to initialize git repository_ " + err.Error()})
+		return
+	}
+
+	err = util.GitCommitAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to commit initial stream: " + err.Error()})
 		return
 	}
 
