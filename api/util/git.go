@@ -29,6 +29,26 @@ func GitInit() error {
 		return err
 	}
 
+	text := "*.json merge=jsonmerge\n"
+	err = os.WriteFile("stream/main/.gitattributes", []byte(text), 0644)
+	if err != nil {
+		return err
+	}
+
+	text = "[merge \"jsonmerge\"]\nname = JSON merge driver using jsonmerge\ndriver = python script/merge_json.py %0 %A %B %A\n"
+	// Append the text to .git/config
+	f, err := os.OpenFile("stream/main/.git/config", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer func(f *os.File) {
+		err := f.Close()
+		if err != nil {
+			fmt.Println("Error closing file:", err)
+		}
+	}(f)
+	_, err = f.WriteString(text)
+
 	_, err = git.PlainInit("stream/write", false)
 	repo, err = git.PlainOpen("stream/write")
 	if err != nil {

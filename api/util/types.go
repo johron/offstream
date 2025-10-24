@@ -21,6 +21,7 @@ type Playlist struct {
 }
 
 type Song struct {
+	UUID     string // artist_album_title_duration_date in base64 => YXJ0aXN0X2FsYnVtX3RpdGxlXzE4MF8wMTAxMjAyNQ==
 	Title    string
 	Artist   string
 	Album    string
