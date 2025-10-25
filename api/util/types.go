@@ -38,18 +38,13 @@ type Duration struct {
 type User struct {
 	Username      string
 	Password      string
-	LastUpdate    time.Time
+	Playlists     []Playlist
 	Configuration Configuration
 }
 
 type Stream struct {
+	LastUpdate int64
 	Version    string
 	Token      string
-	LastUpdate time.Time
-}
-
-type Data struct {
-	Stream    Stream
-	Playlists []Playlist
-	User      *User
+	Users      []User
 }

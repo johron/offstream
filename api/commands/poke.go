@@ -2,6 +2,7 @@ package commands
 
 import (
 	"api/actions"
+	"api/util"
 	"net/http"
 	"time"
 
@@ -11,8 +12,7 @@ import (
 type PokeCommand struct{}
 
 type PokeRequest struct {
-	Username   string `form:"username" binding:"required"`
-	LastUpdate int64  `form:"last_update" binding:"required"`
+	Stream util.Stream `form:"stream" binding:"required"`
 }
 
 func init() {
@@ -30,15 +30,9 @@ func (cmd *PokeCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	user := actions.GetUser(req.Username)
-	if user == nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
-		return
-	}
-
-	data := actions.GetUpdatesSince(user.Username, time.Unix(req.LastUpdate, 0))
+	data := actions.GetUpdates(req.Stream)
 	c.JSON(http.StatusOK, gin.H{
 		"data":      data.Return,
-		"timestamp": time.Now().Unix(),
+		"timestamp": time.Now().Unix(), // TODO: should this be here?
 	})
 }

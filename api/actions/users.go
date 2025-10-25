@@ -6,117 +6,55 @@ import (
 	"time"
 )
 
-func AddUser(username string, password string) util.ActionResponse {
-	users := GetUsers()
+func AddUser(username string, password string) error {
+	stream, err := GetStream()
+	if err != nil {
+		return err
+	}
+
+	users := stream.Users
 
 	for _, user := range users {
 		if user.Username == username {
-			return util.ActionResponse{
-				Success: false,
-				Message: "user already exists",
-			}
+			return fmt.Errorf("user already exists")
 		}
 	}
 
 	user := util.User{
 		Username:      username,
 		Password:      password,
-		LastUpdate:    time.Now(),
 		Configuration: util.Configuration{},
+		Playlists:     []util.Playlist{},
 	}
 	users = append(users, user)
 
-	fmt.Println(users)
+	stream.Users = users
+	stream.LastUpdate = time.Now().Unix()
 
-	err := util.WriteUserFile(username, user)
-	if err != nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "failed to write user file",
-		}
+	writeErr := util.WriteStreamFile(*stream)
+	if writeErr != nil {
+		return fmt.Errorf("failed to write stream file: %v", writeErr)
 	}
 
-	err = util.GitCommitAll()
-	if err != nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "failed to commit changes" + err.Error(),
-		}
-	}
-
-	return util.ActionResponse{
-		Success: true,
-		Message: "user added successfully",
-	}
+	return nil
 }
 
 func GetUsers() []util.User {
-	err, users := util.ReadAllUserFiles()
+	err, stream := util.ReadStreamFile()
 	if err != nil {
 		return []util.User{}
 	}
 
-	return users
+	return stream.Users
 }
 
 func GetUser(username string) *util.User {
-	err, user := util.ReadUserFile(username)
-	if err != nil {
-		return nil
-	}
-
-	return user
-}
-
-func GetPlaylists(username string) []util.Playlist {
-	err, playlists := util.ReadAllPlaylistFiles(username)
-	if err != nil {
-		return []util.Playlist{}
-	}
-
-	return playlists
-}
-
-func GetUpdatesSince(username string, since time.Time) util.ActionResponse {
-	user := GetUser(username)
-	if user == nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "user not found",
+	users := GetUsers()
+	for _, user := range users {
+		if user.Username == username {
+			return &user
 		}
 	}
 
-	var updatedPlaylists []util.Playlist
-	playlists := GetPlaylists(username)
-	for _, playlist := range playlists {
-		if playlist.LastUpdate.After(since) {
-			updatedPlaylists = append(updatedPlaylists, playlist)
-		}
-	}
-
-	userUpdated := false
-	if user.LastUpdate.After(since) {
-		userUpdated = true
-	}
-
-	if !userUpdated && len(updatedPlaylists) == 0 {
-		return util.ActionResponse{
-			Success: true,
-			Message: "no updates",
-		}
-	}
-
-	var poke util.Data
-	if userUpdated {
-		poke.User = user
-	}
-	if len(updatedPlaylists) > 0 {
-		poke.Playlists = updatedPlaylists
-	}
-
-	return util.ActionResponse{
-		Success: true,
-		Message: "updates retrieved successfully",
-		Return:  poke,
-	}
+	return nil
 }

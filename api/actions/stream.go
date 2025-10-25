@@ -2,30 +2,26 @@ package actions
 
 import (
 	"api/util"
+	"fmt"
 	"time"
+
+	"github.com/goccy/go-json"
 )
 
-func GetStream() util.ActionResponse {
+func GetStream() (*util.Stream, error) {
 	err, stream := util.ReadStreamFile()
 	if err != nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "failed to read stream",
-		}
+		return nil, fmt.Errorf("failed to read stream file: %v", err)
 	}
 
-	return util.ActionResponse{
-		Success: true,
-		Message: "stream retrieved successfully",
-		Return:  stream,
-	}
+	return stream, nil
 }
 
 func InitStream(version string, token string) util.ActionResponse {
-	stream := &util.Stream{
+	stream := util.Stream{
 		Version:    version,
 		Token:      token,
-		LastUpdate: time.Now(),
+		LastUpdate: time.Now().Unix(),
 	}
 
 	streamErr := util.WriteStreamFile(stream)
@@ -42,43 +38,39 @@ func InitStream(version string, token string) util.ActionResponse {
 	}
 }
 
-func ApplyUpdates(username string, updates util.Data) util.ActionResponse {
-	user := GetUser(username)
-	if user == nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "user not found",
-		}
+func UpdateStream(stream util.Stream) error {
+	existingStream, err := GetStream()
+	if err != nil {
+		return fmt.Errorf("failed to get existing stream: %v", err)
+	}
+	
+	oldStream, err := json.Marshal(existingStream)
+	if err != nil {
+		return fmt.Errorf("failed to marshal existing stream: %v", err)
 	}
 
-	streamErr := util.WriteStreamFile(updates.Stream)
-	if streamErr != nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "failed to write stream file",
-		}
+	newStream, err := json.Marshal(&stream)
+	if err != nil {
+		return fmt.Errorf("failed to marshal new stream: %v", err)
 	}
 
-	userErr := util.WriteUserFile(username, *user)
-	if userErr != nil {
-		return util.ActionResponse{
-			Success: false,
-			Message: "failed to write user file",
-		}
+	if string(oldStream) == string(newStream) {
+		return nil
 	}
 
-	for _, playlist := range updates.Playlists {
-		err := util.WritePlaylistFile(username, playlist.Title, playlist)
-		if err != nil {
-			return util.ActionResponse{
-				Success: false,
-				Message: "failed to write playlist file",
-			}
-		}
-	}
+	var a, b map[string]interface{}
+	a, err = util.LoadJSON(string(oldStream))
+	b, err = util.LoadJSON(string(newStream))
+	res := util.Merge(a, b)
+	fmt.Println(res)
 
+	return nil
+}
+
+func GetUpdates(stream util.Stream) util.ActionResponse {
 	return util.ActionResponse{
 		Success: true,
-		Message: "updates applied successfully",
+		Message: "updates retrieved successfully",
+		Return:  stream,
 	}
 }

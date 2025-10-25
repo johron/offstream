@@ -38,11 +38,10 @@ func (cmd *AddUserCommand) Handle(c *gin.Context) {
 	}
 
 	user := actions.AddUser(req.Username, req.Password)
-	if user.Success {
-		c.JSON(http.StatusOK, gin.H{
-			"message": user.Message,
-		})
-	} else {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": user.Message})
+	if user != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": user.Error()})
+		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "user added successfully"})
 }

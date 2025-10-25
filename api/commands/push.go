@@ -11,9 +11,9 @@ import (
 type PushCommand struct{}
 
 type PushRequest struct {
-	Username string    `json:"username" binding:"required"`
-	Password string    `json:"password" binding:"required"`
-	Updates  util.Data `json:"updates" binding:"required"`
+	Username string      `json:"username" binding:"required"`
+	Password string      `json:"password" binding:"required"`
+	Updates  util.Stream `json:"updates" binding:"required"`
 }
 
 func init() {
@@ -43,15 +43,9 @@ func (cmd *PushCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	result := actions.ApplyUpdates(user.Username, req.Updates)
-	if !result.Success {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Message})
-		return
-	}
-
-	err := util.GitCommitAll()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to commit changes"})
+	result := actions.UpdateStream(req.Updates)
+	if result != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error()})
 		return
 	}
 

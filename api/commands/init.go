@@ -3,7 +3,6 @@ package commands
 import (
 	"api/actions"
 	"api/constants"
-	"api/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -32,9 +31,9 @@ func (cmd *InitCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	stream := actions.GetStream()
-	if stream.Success {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "stream already initialized"})
+	_, streamErr := actions.GetStream()
+	if streamErr == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "stream already initialized"})
 		return
 	}
 
@@ -46,18 +45,6 @@ func (cmd *InitCommand) Handle(c *gin.Context) {
 	result := actions.InitStream(req.Version, req.Token)
 	if !result.Success {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Message})
-		return
-	}
-
-	err := util.GitInit()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to initialize git repository_ " + err.Error()})
-		return
-	}
-
-	err = util.GitCommitAll()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to commit initial stream: " + err.Error()})
 		return
 	}
 
