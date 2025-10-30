@@ -82,10 +82,26 @@ func UpdateStream(stream util.Stream) error {
 	return nil
 }
 
-func GetUpdates(stream util.Stream) util.ActionResponse {
-	return util.ActionResponse{
-		Success: true,
-		Message: "updates retrieved successfully",
-		Return:  stream,
+func GetUpdates(stream util.Stream) (error, *util.Stream) {
+	existingStream, err := GetStream()
+	if err != nil {
+		return fmt.Errorf("failed to get existing stream: %v", err), nil
 	}
+
+	// Timestamps are equal → no updates needed
+	if stream.LastUpdate == existingStream.LastUpdate {
+		return nil, nil
+	}
+
+	// Incoming stream is older → client has obsolete data
+	if stream.LastUpdate < existingStream.LastUpdate {
+		return nil, existingStream
+	}
+
+	// Incoming stream is newer → server needs update
+	if stream.LastUpdate > existingStream.LastUpdate {
+		return fmt.Errorf("incoming stream is newer than existing stream"), &stream
+	}
+
+	return nil, nil
 }

@@ -4,7 +4,6 @@ import (
 	"api/actions"
 	"api/util"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,9 +29,22 @@ func (cmd *PokeCommand) Handle(c *gin.Context) {
 		return
 	}
 
-	data := actions.GetUpdates(req.Stream)
-	c.JSON(http.StatusOK, gin.H{
-		"data":      data.Return,
-		"timestamp": time.Now().Unix(), // TODO: should this be here?
-	})
+	err, stream := actions.GetUpdates(req.Stream)
+	if err != nil && stream != nil {
+		c.JSON(http.StatusOK, gin.H{"message": "server needs update"})
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if stream == nil {
+		c.JSON(http.StatusOK, gin.H{"message": "stream is up to date"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "client needs update", "stream": stream})
+	return
 }
