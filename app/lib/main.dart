@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/controller/playback.dart';
+import 'package:offstream/page/settings_page.dart';
 import 'package:offstream/type/page.dart';
 import 'package:offstream/util/util.dart';
 
@@ -64,7 +65,7 @@ class _OffstreamAppState extends State<OffstreamApp> {
       case Pages.search:
         return Text('Search Content');
       case Pages.settings:
-        return Text('Settings Content');
+        return SettingsPage();
       case Pages.playlist:
         if (_selectedPage.playlistPath == null) {
           return Text('No playlist selected');

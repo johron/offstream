@@ -89,7 +89,8 @@ class _SidebarState extends State<Sidebar> {
         title: Text(data.title),
         selected: selectedPage.page == Pages.playlist && selectedPage.playlistPath == getPlaylistPath(data),
         onTap: () => _changePage(OPage(Pages.playlist, getPlaylistPath(data)))
-      )
+      ),
+
     ];
   }
 }
