@@ -43,7 +43,7 @@ func UpdateStream(stream util.Stream) error {
 	if err != nil {
 		return fmt.Errorf("failed to get existing stream: %v", err)
 	}
-	
+
 	oldStream, err := json.Marshal(existingStream)
 	if err != nil {
 		return fmt.Errorf("failed to marshal existing stream: %v", err)
@@ -62,7 +62,22 @@ func UpdateStream(stream util.Stream) error {
 	a, err = util.LoadJSON(string(oldStream))
 	b, err = util.LoadJSON(string(newStream))
 	res := util.Merge(a, b)
-	fmt.Println(res)
+
+	mergedStreamBytes, err := json.Marshal(res)
+	if err != nil {
+		return fmt.Errorf("failed to marshal merged stream: %v", err)
+	}
+
+	var mergedStream util.Stream
+	err = json.Unmarshal(mergedStreamBytes, &mergedStream)
+	if err != nil {
+		return fmt.Errorf("failed to unmarshal merged stream: %v", err)
+	}
+
+	err = util.WriteStreamFile(mergedStream)
+	if err != nil {
+		return fmt.Errorf("failed to write merged stream file: %v", err)
+	}
 
 	return nil
 }
