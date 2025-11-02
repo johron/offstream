@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/component/settings/settings_dropdown.dart';
 import 'package:offstream/component/settings/settings_toggle.dart';
 
 import '../component/settings/settings_button.dart';
+import '../component/settings/settings_text.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -23,13 +25,14 @@ class _SettingsPageState extends State<SettingsPage> {
         Text('Settings', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
         SizedBox(height: 50),
 
-        Text('Category', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        SettingsButton(buttonText: "Button", description: "Button description", onPressed: () {
-          print("Button pressed");
+        Text("Manage remote stream", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+
+        SettingsToggle(toggled: false, description: "Enable Sync", onPressed: (value) {
+          print("Toggle pressed to: $value");
         }),
 
-        SettingsToggle(toggled: false, description: "Toggle description", onPressed: () {
-          print("Toggle pressed");
+        SettingsText(value: "http://127.0.0.1:8080", description: "Stream Remote URL", onChanged: (text) {
+          print("Text changed to: $text");
         }),
       ],
     );

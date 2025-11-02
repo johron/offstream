@@ -17,6 +17,10 @@ class SettingsButton extends StatefulWidget {
 }
 
 class _SettingsButtonState extends State<SettingsButton> {
+  void updateState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,7 +29,10 @@ class _SettingsButtonState extends State<SettingsButton> {
         children: [
           Text(widget.description, style: TextStyle(fontSize: 16)),
           Expanded(child: Container()),
-          ElevatedButton(onPressed: widget.onPressed, child: Text(widget.buttonText)) // Muligens ha noe automatisk for å sette instilligen med state og sånn og kalle streamController
+          ElevatedButton(onPressed: () {
+            updateState();
+            widget.onPressed?.call();
+          }, child: Text(widget.buttonText))
         ],
       )
     );
