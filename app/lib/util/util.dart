@@ -69,7 +69,7 @@ String getMissingAlbumArtPath() {
 StreamData getSampleStreamData() {
   return StreamData(
     lastUpdate: DateTime.now().millisecondsSinceEpoch,
-    version: "1.0.0", token: "token123",
+    version: "2025-1.0", token: "token123",
     users: [
       UserData(
         username: "username",
