@@ -23,4 +23,16 @@ class UserData {
       'configuration': configuration.toJson(),
     };
   }
+
+  factory UserData.fromJson(Map<String, dynamic> json) {
+    return UserData(
+      username: json['username'],
+      password: json['password'],
+      playlists: (json['playlists'] as List<dynamic>)
+          .map((playlistJson) => PlaylistData.fromJson(playlistJson))
+          .toList(),
+      configuration:
+          ConfigurationData.fromJson(json['configuration']),
+    );
+  }
 }

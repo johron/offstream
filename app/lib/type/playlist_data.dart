@@ -21,4 +21,15 @@ class PlaylistData {
       'lastUpdate': lastUpdate.millisecondsSinceEpoch,
     };
   }
+
+  factory PlaylistData.fromJson(Map<String, dynamic> json) {
+    return PlaylistData(
+      title: json['title'],
+      songs: (json['songs'] as List<dynamic>)
+          .map((songJson) => SongData.fromJson(songJson))
+          .toList(),
+      created: DateTime.parse(json['created']),
+      lastUpdate: DateTime.fromMillisecondsSinceEpoch(json['lastUpdate']),
+    );
+  }
 }

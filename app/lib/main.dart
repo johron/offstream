@@ -15,7 +15,8 @@ import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 void main() async {
   JustAudioMediaKit.ensureInitialized();
 
-  await StorageController().save(StreamData(lastUpdate: DateTime.now().millisecondsSinceEpoch, version: "1.0.0", token: "token123", users: []));
+  await StorageController().save(getSampleStreamData());
+  print(await StorageController().load());
 
   PlaybackController().init();
 

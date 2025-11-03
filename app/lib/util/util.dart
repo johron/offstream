@@ -1,7 +1,11 @@
 import 'dart:math' as math;
 
+import 'package:offstream/type/configuration_data.dart';
 import 'package:offstream/type/playlist_data.dart';
 import 'package:offstream/type/song_data.dart';
+import 'package:offstream/type/user_data.dart';
+
+import '../type/stream_data.dart';
 
 PlaylistData getSamplePlaylist() {
   return PlaylistData(
@@ -60,4 +64,19 @@ Duration multiplyDuration(Duration duration, double factor) {
 
 String getMissingAlbumArtPath() {
   return 'https://community.spotify.com/t5/image/serverpage/image-id/55829iC2AD64ADB887E2A5/image-size/large?v=v2&px=999';
+}
+
+StreamData getSampleStreamData() {
+  return StreamData(
+    lastUpdate: DateTime.now().millisecondsSinceEpoch,
+    version: "1.0.0", token: "token123",
+    users: [
+      UserData(
+        username: "username",
+        password: "password",
+        playlists: [getSamplePlaylist()],
+        configuration: ConfigurationData()
+      )
+    ],
+  );
 }

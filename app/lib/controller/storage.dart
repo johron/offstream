@@ -47,8 +47,6 @@ class StorageController {
   Future<File> save(StreamData data) async {
     final file = await _localFile;
     final String stream = jsonEncode(data);
-    print(file.path);
-    print(stream);
     return file.writeAsString(stream);
   }
 

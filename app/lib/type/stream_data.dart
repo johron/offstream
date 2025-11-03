@@ -21,4 +21,15 @@ class StreamData {
       'users': users.map((user) => user.toJson()).toList(),
     };
   }
+
+  factory StreamData.fromJson(Map<String, dynamic> json) {
+    return StreamData(
+      lastUpdate: json['lastUpdate'],
+      version: json['version'],
+      token: json['token'],
+      users: (json['users'] as List<dynamic>)
+          .map((userJson) => UserData.fromJson(userJson))
+          .toList(),
+    );
+  }
 }

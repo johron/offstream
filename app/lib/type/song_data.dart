@@ -25,4 +25,15 @@ class SongData {
       'added': added.toIso8601String(),
     };
   }
+
+  factory SongData.fromJson(Map<String, dynamic> json) {
+    return SongData(
+      uuid: json['uuid'],
+      title: json['title'],
+      artist: json['artist'],
+      album: json['album'],
+      duration: Duration(milliseconds: json['duration']),
+      added: DateTime.parse(json['added']),
+    );
+  }
 }
