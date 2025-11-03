@@ -40,7 +40,7 @@ class _PlaylistState extends State<Playlist> {
 
   @override
   Widget build(BuildContext context) {
-      var iconPath = data.iconPath;
+      var iconPath = getMissingAlbumArtPath();
       if (iconPath == null || iconPath.isEmpty) {
         iconPath = getMissingAlbumArtPath();
       }

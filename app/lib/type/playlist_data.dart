@@ -1,15 +1,24 @@
 import 'package:offstream/type/song_data.dart';
 
 class PlaylistData {
-  final String repo;
   final String title;
   final List<SongData> songs;
-  final String? iconPath;
+  final DateTime created;
+  final DateTime lastUpdate;
 
   const PlaylistData({
-    required this.repo,
     required this.title,
     required this.songs,
-    this.iconPath,
+    required this.created,
+    required this.lastUpdate,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'songs': songs.map((song) => song.toJson()).toList(),
+      'created': created.toIso8601String(),
+      'lastUpdate': lastUpdate.millisecondsSinceEpoch,
+    };
+  }
 }

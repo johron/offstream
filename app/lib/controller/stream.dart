@@ -5,10 +5,9 @@ class StreamController {
 
   factory StreamController() => _instance;
 
-  String _stream;
+  String _stream = "";
 
   void init() {
-    var resp = 
   }
 
   void set(String stream) {

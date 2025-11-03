@@ -78,7 +78,8 @@ class _SidebarState extends State<Sidebar> {
   List<ListTile> getPlaylists() {
     PlaylistData data = getSamplePlaylist();
 
-    var iconPath = data.iconPath;
+    var iconPath = getMissingAlbumArtPath();
+    //var iconPath = data.iconPath;
     if (iconPath == null || iconPath.isEmpty) {
       iconPath = getMissingAlbumArtPath();
     }

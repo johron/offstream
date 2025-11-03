@@ -5,21 +5,22 @@ import 'package:offstream/type/song_data.dart';
 
 PlaylistData getSamplePlaylist() {
   return PlaylistData(
-    repo: 'github.com/user/offstream',
     title: 'Playlist 1',
     songs: [
       SongData(
         title: "Holy Diver",
         artist: "Dio",
         album: "Holy Diver",
-        albumArtPath: "https://m.media-amazon.com/images/I/81exki0oztL._UF1000,1000_QL80_.jpg",
-        addedAt: DateTime(1983, 5, 25),
+        added: DateTime(1983, 5, 25),
         duration: Duration(minutes: 5, seconds: 52),
+        uuid: 'sample-uuid-0',
       ),
       getSampleSong(1),
       getSampleSong(2),
       getSampleSong(3),
     ],
+    created: DateTime.now().subtract(Duration(days: 30)),
+    lastUpdate: DateTime.now(),
   );
 }
 
@@ -28,14 +29,15 @@ SongData getSampleSong(int num) {
       title: "Song $num",
       artist: "Artist $num",
       album: "Album $num",
-      albumArtPath: getMissingAlbumArtPath(),
-      addedAt: DateTime.now(),
-      duration: Duration(minutes: 3, seconds: num * 10)
+      added: DateTime.now(),
+      duration: Duration(minutes: 3, seconds: num * 10),
+      uuid: 'sample-uuid-$num',
   );
 }
 
 String getPlaylistPath(PlaylistData playlist) {
-  return '${playlist.repo}/${playlist.title}';
+  return "sample_stream/${playlist.title}";
+  //return '${playlist.repo}/${playlist.title}';
 }
 
 double calculateTitleFontSize(String title) {

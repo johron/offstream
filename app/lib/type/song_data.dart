@@ -1,17 +1,28 @@
 class SongData {
+  final String uuid;
   final String title;
   final String artist;
   final String album;
   final Duration duration;
-  final String albumArtPath;
-  final DateTime addedAt;
+  final DateTime added;
 
   const SongData({
+    required this.uuid,
     required this.title,
     required this.artist,
     required this.album,
     required this.duration,
-    required this.addedAt,
-    required this.albumArtPath,
+    required this.added,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'uuid': uuid,
+      'title': title,
+      'artist': artist,
+      'album': album,
+      'duration': duration.inMilliseconds,
+      'added': added.toIso8601String(),
+    };
+  }
 }

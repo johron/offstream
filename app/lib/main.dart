@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/controller/playback.dart';
+import 'package:offstream/controller/storage.dart';
 import 'package:offstream/page/settings_page.dart';
 import 'package:offstream/type/page.dart';
+import 'package:offstream/type/stream_data.dart';
 import 'package:offstream/util/util.dart';
 
 import 'package:offstream/view/multimedia.dart';
@@ -12,6 +14,8 @@ import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 
 void main() async {
   JustAudioMediaKit.ensureInitialized();
+
+  await StorageController().save(StreamData(lastUpdate: DateTime.now().millisecondsSinceEpoch, version: "1.0.0", token: "token123", users: []));
 
   PlaybackController().init();
 

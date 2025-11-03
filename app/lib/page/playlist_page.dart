@@ -43,7 +43,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
             direction: Axis.horizontal,
             children: [
               Rounded(radius: 10, child: Image.network(
-                playlist.iconPath ?? getMissingAlbumArtPath(),
+              /*playlist.songs.first.albumArtPath ??*/ getMissingAlbumArtPath(),
                 width: 150,
                 height: 150,
                 fit: BoxFit.cover,
@@ -143,7 +143,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
               Rounded(
                 radius: 5,
                 child: Image.network(
-                  data.albumArtPath,
+                  getMissingAlbumArtPath(),
+                  //data.albumArtPath,
                   width: 35,
                   height: 35,
                   fit: BoxFit.cover,
@@ -163,7 +164,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
           )
         ),
         DataCell(Text(data.album, style: TextStyle(color: Colors.white70))),
-        DataCell(Text(formatDateTime(data.addedAt), style: TextStyle(color: Colors.white70))),
+        DataCell(Text(formatDateTime(data.added), style: TextStyle(color: Colors.white70))),
         DataCell(Text(formatDuration(data.duration), style: TextStyle(color: Colors.white70))),
       ]));
     }
