@@ -70,13 +70,6 @@ StreamData getSampleStreamData() {
   return StreamData(
     lastUpdate: DateTime.now().millisecondsSinceEpoch,
     version: "2025-1.0", token: "token123",
-    users: [
-      UserData(
-        username: "username",
-        password: "password",
-        playlists: [getSamplePlaylist()],
-        configuration: ConfigurationData()
-      )
-    ],
+    users: [],
   );
 }

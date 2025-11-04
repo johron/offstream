@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/controller/auth.dart';
 import 'package:offstream/controller/playback.dart';
 import 'package:offstream/controller/storage.dart';
 import 'package:offstream/page/settings_page.dart';
@@ -15,9 +16,10 @@ import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 void main() async {
   JustAudioMediaKit.ensureInitialized();
 
-  await StorageController().save(getSampleStreamData());
-  print(await StorageController().load());
+  await StorageController().saveStream(getSampleStreamData());
+  StorageController().init();
 
+  AuthController().init();
   PlaybackController().init();
 
   runApp(const OffstreamApp());
@@ -76,8 +78,13 @@ class _OffstreamAppState extends State<OffstreamApp> {
           return Text('No playlist selected');
         }
 
+        var auth = AuthController();
+        if (auth.loggedInUser == null) {
+          return Text('User not logged in');
+        }
+
         return PlaylistPage(
-          playlist: getSamplePlaylist(),
+          playlist: auth.loggedInUser!.playlists.first,
         );
     }
   }

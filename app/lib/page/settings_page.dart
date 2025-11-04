@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/component/settings/settings_toggle.dart';
+import 'package:offstream/controller/auth.dart';
 import 'package:offstream/controller/storage.dart';
 import 'package:offstream/type/user_data.dart';
 
 import '../component/settings/settings_label.dart';
+import '../component/settings/settings_login.dart';
 import '../component/settings/settings_text.dart';
 import '../type/stream_data.dart';
 
@@ -40,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
         SizedBox(height: 20),
         Text('Application', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         FutureBuilder<StreamData?>(
-          future: StorageController().load(),
+          future: StorageController().loadStream(),
           builder: (context, snapshot) {
             final version = snapshot.data?.version;
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -54,7 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         // list out all users, with their usernames and uuid
         FutureBuilder<StreamData?>(
-          future: StorageController().load(),
+          future: StorageController().loadStream(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text("Loading users...");
@@ -62,28 +64,19 @@ class _SettingsPageState extends State<SettingsPage> {
               return Text("Error loading users");
             } else {
               final users = snapshot.data?.users;
-              return Column(
-                children: users != null && users.isNotEmpty
-                    ? [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: DataTable(
-                            columns: const [
-                              DataColumn(label: Text('Index')),
-                              DataColumn(label: Text('Username')),
-                            ],
-                            rows: users.asMap().entries.map((entry) {
-                              final idx = entry.key;
-                              final user = entry.value;
-                              return DataRow(cells: [
-                                DataCell(Text((idx + 1).toString())),
-                                DataCell(Text(user.username)),
-                              ]);
-                            }).toList(),
-                          ),
-                        ),
-                      ]
-                    : [Text("No users found")],
+              return SettingsLogin(
+                values: users?.map((e) => e.username).toList() ?? [],
+                selectedValue: users?.first.username ?? null,
+                description: "Login",
+                onLogin: (username, password) {
+                  AuthController().login(username, password).then((success) {
+
+                    final snackBar = SnackBar(
+                      content: Text(success ? "Login successful" : "Login failed"),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  });
+                }
               );
             }
           },
