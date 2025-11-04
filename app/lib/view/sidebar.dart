@@ -4,6 +4,7 @@ import 'package:offstream/type/page.dart';
 import 'package:offstream/util/util.dart';
 
 import '../component/rounded.dart';
+import '../controller/auth.dart';
 import '../type/playlist_data.dart';
 
 class Sidebar extends StatefulWidget {
@@ -18,6 +19,7 @@ class Sidebar extends StatefulWidget {
 
   @override
   State<Sidebar> createState() => _SidebarState();
+
 }
 
 class _SidebarState extends State<Sidebar> {
@@ -27,6 +29,14 @@ class _SidebarState extends State<Sidebar> {
   void initState() {
     super.initState();
     selectedPage = widget.initialPage;
+
+    AuthController().onLoginStateChanged.listen((event) {
+      updateState();
+    });
+  }
+
+  void updateState() {
+    setState(() {});
   }
 
   void _changePage(OPage page) {
@@ -76,22 +86,24 @@ class _SidebarState extends State<Sidebar> {
   }
 
   List<ListTile> getPlaylists() {
-    PlaylistData data = getSamplePlaylist();
-
-    var iconPath = getMissingAlbumArtPath();
-    //var iconPath = data.iconPath;
-    if (iconPath == null || iconPath.isEmpty) {
-      iconPath = getMissingAlbumArtPath();
+    var auth = AuthController();
+    if (auth.loggedInUser == null) {
+      return [];
     }
 
-    return [
-      ListTile(
-        leading: Rounded(child: Image.network(iconPath, scale: 5)),
-        title: Text(data.title),
-        selected: selectedPage.page == Pages.playlist && selectedPage.playlistPath == getPlaylistPath(data),
-        onTap: () => _changePage(OPage(Pages.playlist, getPlaylistPath(data)))
-      ),
+    List<ListTile> playlists = [];
 
-    ];
+    for (var playlist in auth.loggedInUser!.playlists) {
+      playlists.add(
+        ListTile(
+            leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),
+            title: Text(playlist.title),
+            selected: selectedPage.page == Pages.playlist && selectedPage.playlist == playlist,
+            onTap: () => _changePage(OPage(Pages.playlist, playlist)
+        )),
+      );
+    }
+
+    return playlists;
   }
 }

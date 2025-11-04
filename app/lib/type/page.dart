@@ -1,4 +1,6 @@
 // Page Enum
+import 'package:offstream/type/playlist_data.dart';
+
 enum Pages {
   library,
   search,
@@ -8,7 +10,7 @@ enum Pages {
 
 class OPage {
   final Pages page;
-  final String? playlistPath; // Git repository path, not applicable for other pages
+  final PlaylistData? playlist; // Git repository path, not applicable for other pages
 
-  const OPage(this.page, this.playlistPath);
+  const OPage(this.page, this.playlist);
 }

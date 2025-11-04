@@ -52,6 +52,11 @@ class _SettingsLoginState extends State<SettingsLogin> {
               onChanged: (text) {
                 widget.value = text;
               },
+              onSubmitted: (text) {
+                if (widget.selectedValue == null) return;
+
+                widget.onLogin?.call(widget.selectedValue!, widget.value);
+              },
             ),
           ),
           ElevatedButton(child: Text("OK"), onPressed: () {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
@@ -13,9 +14,13 @@ class AuthController {
 
   factory AuthController() => _instance;
 
+  UserData? _loggedInUser;
+
   UserData? get loggedInUser => _loggedInUser;
 
-  UserData? _loggedInUser;
+  final _loginStateController = StreamController<UserData?>.broadcast();
+
+  Stream<UserData?> get onLoginStateChanged => _loginStateController.stream;
 
   void init() {
     var newUser = UserData(
@@ -96,19 +101,26 @@ class AuthController {
       if (user.username == username && user.password == hashSha256(password)) {
         _loggedInUser = user;
         print("User ${user.username} logged in successfully.");
+
+        _loginStateController.add(_loggedInUser);
+
         return true;
       }
     }
-
-    print(password);
-    print(hashSha256(password));
 
     print("Login failed for user $username.");
     return false;
   }
 
-  void logout() {
-    // Implement logout logic here
-    print("Not yet implemented: logout()");
+  bool logout() {
+    if (_loggedInUser != null) {
+      _loggedInUser = null;
+
+      _loginStateController.add(_loggedInUser);
+
+      return true;
+    } else {
+      return false;
+    }
   }
 }

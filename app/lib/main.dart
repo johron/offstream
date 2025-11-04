@@ -74,7 +74,7 @@ class _OffstreamAppState extends State<OffstreamApp> {
       case Pages.settings:
         return SettingsPage();
       case Pages.playlist:
-        if (_selectedPage.playlistPath == null) {
+        if (_selectedPage.playlist == null) {
           return Text('No playlist selected');
         }
 
@@ -84,7 +84,7 @@ class _OffstreamAppState extends State<OffstreamApp> {
         }
 
         return PlaylistPage(
-          playlist: auth.loggedInUser!.playlists.first,
+          playlist: _selectedPage.playlist!,
         );
     }
   }

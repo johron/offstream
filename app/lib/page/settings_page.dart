@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/component/settings/settings_button.dart';
 import 'package:offstream/component/settings/settings_toggle.dart';
 import 'package:offstream/controller/auth.dart';
 import 'package:offstream/controller/storage.dart';
@@ -17,6 +18,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  void updateState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,6 +33,49 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         Text('Settings', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
         SizedBox(height: 50),
+
+        Text("Authentication", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        AuthController().loggedInUser == null
+          ? FutureBuilder<StreamData?>(
+              future: StorageController().loadStream(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading users...");
+                } else if (snapshot.hasError) {
+                  return Text("Error loading users");
+                } else {
+                  final users = snapshot.data?.users;
+                  return SettingsLogin(
+                    values: users?.map((e) => e.username).toList() ?? [],
+                    selectedValue: users?.first.username,
+                    description: "Login",
+                    onLogin: (username, password) {
+                      AuthController().login(username, password).then((success) {
+                        final snackBar = SnackBar(
+                          content: Text(success ? "Login successful" : "Login failed"),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      });
+                      updateState();
+                    },
+                  );
+                }
+              },
+            )
+          : SettingsButton(
+              buttonText: "Logout",
+              description: "Logged in as '${AuthController().loggedInUser!.username}'",
+              onPressed: () {
+                var success = AuthController().logout();
+                updateState();
+                final snackBar = SnackBar(
+                  content: Text(success ? "Logged out" : "Logout failed"),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              },
+            ),
+
+        SizedBox(height: 20),
 
         Text("Manage remote stream", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
 
@@ -51,33 +99,6 @@ class _SettingsPageState extends State<SettingsPage> {
               return SettingsLabel(value: "Error", description: "Version");
             } else {
               return SettingsLabel(value: version ?? "Unknown", description: "Version");
-            }
-          },
-        ),
-        // list out all users, with their usernames and uuid
-        FutureBuilder<StreamData?>(
-          future: StorageController().loadStream(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading users...");
-            } else if (snapshot.hasError) {
-              return Text("Error loading users");
-            } else {
-              final users = snapshot.data?.users;
-              return SettingsLogin(
-                values: users?.map((e) => e.username).toList() ?? [],
-                selectedValue: users?.first.username ?? null,
-                description: "Login",
-                onLogin: (username, password) {
-                  AuthController().login(username, password).then((success) {
-
-                    final snackBar = SnackBar(
-                      content: Text(success ? "Login successful" : "Login failed"),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  });
-                }
-              );
             }
           },
         ),
