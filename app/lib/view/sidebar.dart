@@ -30,7 +30,7 @@ class _SidebarState extends State<Sidebar> {
     super.initState();
     selectedPage = widget.initialPage;
 
-    AuthController().onLoginStateChanged.listen((event) {
+    AuthController().onAuthenticatedStream.listen((event) {
       updateState();
     });
   }
@@ -87,13 +87,13 @@ class _SidebarState extends State<Sidebar> {
 
   List<ListTile> getPlaylists() {
     var auth = AuthController();
-    if (auth.loggedInUser == null) {
+    if (auth.loggedInUser == null || !auth.loggedInUser!.isAuthenticated) {
       return [];
     }
 
     List<ListTile> playlists = [];
 
-    for (var playlist in auth.loggedInUser!.playlists) {
+    for (var playlist in auth.loggedInUser!.user.playlists) {
       playlists.add(
         ListTile(
             leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),

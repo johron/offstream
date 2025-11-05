@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 class SettingsText extends StatefulWidget {
   String value;
   final String description;
-  final Function (String)? onChanged;
+  final Function (String) onChanged;
 
   SettingsText({
     required this.value,

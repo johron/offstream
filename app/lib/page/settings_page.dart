@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/component/settings/settings_button.dart';
+import 'package:offstream/component/settings/settings_dropdown.dart';
+import 'package:offstream/component/settings/settings_signup.dart';
 import 'package:offstream/component/settings/settings_toggle.dart';
 import 'package:offstream/controller/auth.dart';
 import 'package:offstream/controller/storage.dart';
-import 'package:offstream/type/user_data.dart';
 
 import '../component/settings/settings_label.dart';
-import '../component/settings/settings_login.dart';
 import '../component/settings/settings_text.dart';
 import '../type/stream_data.dart';
 
@@ -20,6 +20,15 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   void updateState() {
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    AuthController().onAuthenticatedStream.listen((event) {
+      updateState();
+    });
+
+    super.initState();
   }
 
   @override
@@ -44,16 +53,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 } else if (snapshot.hasError) {
                   return Text("Error loading users");
                 } else {
+                  if (!snapshot.hasData || snapshot.data!.users.isEmpty) {
+                    // return empty widget
+                    return Text("No users available. Please sign up.");
+                  }
+
                   final users = snapshot.data?.users;
-                  return SettingsLogin(
+                  return SettingsDropdown(
                     values: users?.map((e) => e.username).toList() ?? [],
                     selectedValue: users?.first.username,
                     description: "Login",
-                    onLogin: (username, password) {
-                      AuthController().login(username, password).then((success) {
+                    onChanged: (username) {
+                      AuthController().login(username!).then((success) {
                         final snackBar = SnackBar(
                           content: Text(success ? "Login successful" : "Login failed"),
                         );
+                        updateState();
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       });
                       updateState();
@@ -64,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
             )
           : SettingsButton(
               buttonText: "Logout",
-              description: "Logged in as '${AuthController().loggedInUser!.username}'",
+              description: "Logged in as '${AuthController().loggedInUser!.user.username}'",
               onPressed: () {
                 var success = AuthController().logout();
                 updateState();
@@ -74,6 +89,33 @@ class _SettingsPageState extends State<SettingsPage> {
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               },
             ),
+
+        AuthController().loggedInUser != null && !AuthController().loggedInUser!.isAuthenticated
+          ? SettingsText(
+              value: "",
+              description: "Enter PIN",
+              onChanged: (pin) {
+                var success = AuthController().verifyPin(pin);
+                final snackBar = SnackBar(
+                  content: Text(success ? "PIN correct, logged in" : "Incorrect PIN"),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                updateState();
+              },
+            )
+          : Container(),
+
+        SettingsSignup(
+          description: "Create User",
+          onSignup: (username, pin) {
+            var success = AuthController().signup(username, pin);
+            final snackBar = SnackBar(
+              content: Text(success ? "Signup successful" : "Signup failed"),
+            );
+            updateState();
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          },
+        ),
 
         SizedBox(height: 20),
 

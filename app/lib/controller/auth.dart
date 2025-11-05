@@ -4,8 +4,19 @@ import 'package:crypto/crypto.dart';
 
 import 'package:offstream/controller/storage.dart';
 import 'package:offstream/type/configuration_data.dart';
+import 'package:offstream/type/local_store.dart';
 import 'package:offstream/type/user_data.dart';
 import 'package:offstream/util/util.dart';
+
+class AuthUser {
+  final UserData user;
+  final bool isAuthenticated;
+
+  AuthUser({
+    required this.user,
+    required this.isAuthenticated,
+  });
+}
 
 class AuthController {
   AuthController._internal();
@@ -14,24 +25,56 @@ class AuthController {
 
   factory AuthController() => _instance;
 
-  UserData? _loggedInUser;
+  AuthUser? _loggedInUser;
 
-  UserData? get loggedInUser => _loggedInUser;
+  AuthUser? get loggedInUser => _loggedInUser;
 
-  final _loginStateController = StreamController<UserData?>.broadcast();
+  final _authenticatedStateController = StreamController<AuthUser?>.broadcast();
 
-  Stream<UserData?> get onLoginStateChanged => _loginStateController.stream;
+  Stream<AuthUser?> get onAuthenticatedStream => _authenticatedStateController.stream;
 
   void init() {
-    var newUser = UserData(
-      username: "username",
-      password: hashSha256("password"),
-      playlists: [
-        getSamplePlaylist(),
-      ],
-      configuration: ConfigurationData(),
-    );
-    StorageController().addUser(newUser);
+    var storage = StorageController();
+
+    // var newUser = UserData(
+    //   username: "username",
+    //   //pin: hashSha256(1234.toString()),
+    //   playlists: [
+    //     getSamplePlaylist(),
+    //   ],
+    //   configuration: ConfigurationData(),
+    // );
+    // storage.addUser(newUser);
+
+    var user = storage.loadLocalStore().then((localStore) {
+      if (localStore == null) {
+        return null;
+      }
+
+      var username = localStore.loggedInUser;
+      var streamData = storage.loadStream();
+
+      return streamData.then((data) {
+        if (data == null) {
+          return null;
+        }
+
+        for (var user in data.users) {
+          if (user.username == username) {
+            return AuthUser(user: user, isAuthenticated: user.pin == null);
+          }
+        }
+
+        return null;
+      });
+    });
+
+    user.then((authUser) {
+      if (authUser != null) {
+        _loggedInUser = authUser;
+        _authenticatedStateController.add(_loggedInUser);
+      }
+    });
   }
 
   String hashSha256(String input) {
@@ -59,7 +102,7 @@ class AuthController {
     return token;
   }
 
-  bool signup(String username, String password) {
+  bool signup(String username, String? pin) {
     var storage = StorageController();
 
     storage.loadStream().then((data) {
@@ -75,12 +118,14 @@ class AuthController {
 
       var newUser = UserData(
         username: username,
-        password: hashSha256(password),
         playlists: [],
         configuration: ConfigurationData(),
+        pin: pin != null ? hashSha256(pin) : null,
       );
 
       storage.addUser(newUser);
+
+      _loggedInUser = AuthUser(user: newUser, isAuthenticated: pin == null);
 
       return true;
     });
@@ -88,7 +133,7 @@ class AuthController {
     return true;
   }
 
-  Future<bool> login(String username, String password) async {
+  Future<bool> login(String username) async {
     var storage = StorageController();
     var stream = await storage.loadStream();
 
@@ -98,11 +143,18 @@ class AuthController {
     }
 
     for (var user in stream.users) {
-      if (user.username == username && user.password == hashSha256(password)) {
-        _loggedInUser = user;
+      if (user.username == username) {
+        if (user.pin != null) {
+          _loggedInUser = AuthUser(user: user, isAuthenticated: false);
+        } else {
+          _loggedInUser = AuthUser(user: user, isAuthenticated: true);
+        }
+
         print("User ${user.username} logged in successfully.");
 
-        _loginStateController.add(_loggedInUser);
+        _authenticatedStateController.add(_loggedInUser);
+
+        await storage.saveLocalStore(LocalStore(loggedInUser: _loggedInUser!.user.username));
 
         return true;
       }
@@ -112,11 +164,29 @@ class AuthController {
     return false;
   }
 
+  bool verifyPin(String pin) {
+    if (_loggedInUser == null) {
+      return false;
+    }
+
+    var hashedPin = hashSha256(pin);
+
+    if (_loggedInUser!.user.pin == hashedPin) {
+      _loggedInUser = AuthUser(user: _loggedInUser!.user, isAuthenticated: true);
+
+      _authenticatedStateController.add(_loggedInUser);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   bool logout() {
     if (_loggedInUser != null) {
       _loggedInUser = null;
 
-      _loginStateController.add(_loggedInUser);
+      _authenticatedStateController.add(_loggedInUser);
 
       return true;
     } else {
