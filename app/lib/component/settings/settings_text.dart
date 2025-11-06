@@ -32,18 +32,20 @@ class _SettingsTextState extends State<SettingsText> {
           Expanded(child: Container()),
           Expanded(
             child: TextField(
-              controller: TextEditingController(text: widget.value),
+              decoration: InputDecoration(
+                labelText: widget.value,
+              ),
               onChanged: (text) {
                 widget.value = text;
               },
               onEditingComplete: () {
                 updateState();
-                widget.onChanged?.call(widget.value);
+                widget.onChanged.call(widget.value);
               },
               onTapOutside: (event) {
                 FocusScope.of(context).unfocus();
                 updateState();
-                widget.onChanged?.call(widget.value);
+                widget.onChanged.call(widget.value);
               },
             ),
           )

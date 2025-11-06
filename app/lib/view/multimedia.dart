@@ -58,13 +58,17 @@ class _MultimediaState extends State<Multimedia> {
                 alignment: Alignment.centerLeft,
                 child: ListTile(
                   leading: Rounded(child: Image.network(getMissingAlbumArtPath())),
-                )) : Container(
+                )) :
+              Container(
                 alignment: Alignment.centerLeft,
                 child: ListTile(
                   //leading: Rounded(child: Image.network(_controller.currentSong!.albumArtPath)),
                   leading: Rounded(child: Image.network(getMissingAlbumArtPath())),
                   title: Text(_controller.currentSong!.title),
                   subtitle: Text(_controller.currentSong!.artist),
+                  trailing: IconButton(icon: Icon(Icons.favorite), onPressed: () {
+
+                  }),
                 ),
               ),
             ),

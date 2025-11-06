@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/component/playlist_create_dialog.dart';
 
 import 'package:offstream/type/page.dart';
 import 'package:offstream/util/util.dart';
@@ -60,6 +61,12 @@ class _SidebarState extends State<Sidebar> {
             title: Text('Library'),
             selected: selectedPage.page == Pages.library,
             onTap: () => _changePage(OPage(Pages.library, null)),
+            trailing: IconButton(icon: Icon(Icons.playlist_add), onPressed: () {
+              // Show dialog to create new playlist
+              showDialog(context: context, builder: (context) {
+                return PlaylistCreateDialog();
+              });
+            }),
           ),
           ListTile(
             leading: Icon(Icons.search),

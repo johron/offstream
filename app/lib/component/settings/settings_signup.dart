@@ -31,6 +31,9 @@ class _SettingsSignupState extends State<SettingsSignup> {
             Expanded(child: Container()),
             Expanded(
               child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'Username',
+                ),
                 onChanged: (text) {
                   widget.username = text;
                 },
@@ -39,6 +42,9 @@ class _SettingsSignupState extends State<SettingsSignup> {
             SizedBox(width: 20),
             Expanded(
               child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'PIN',
+                ),
                 obscureText: true,
                 onChanged: (text) {
                   if (text.isEmpty) {

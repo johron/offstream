@@ -116,6 +116,10 @@ class StorageController {
     }
   }
 
+  bool createPlaylist(String name, String description) {
+    todo!
+  }
+
   bool addUser(UserData user) {
     loadStream().then((data) {
       if (data == null) {
