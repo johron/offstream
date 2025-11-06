@@ -8,6 +8,7 @@ import 'package:offstream/util/constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:offstream/type/stream_data.dart';
 
+import '../type/playlist_data.dart';
 import '../type/user_data.dart';
 
 class StorageController {
@@ -114,10 +115,6 @@ class StorageController {
     } catch (e) {
       return null;
     }
-  }
-
-  bool createPlaylist(String name, String description) {
-    todo!
   }
 
   bool addUser(UserData user) {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:offstream/type/configuration_data.dart';
@@ -9,6 +10,7 @@ import '../type/stream_data.dart';
 
 PlaylistData getSamplePlaylist() {
   return PlaylistData(
+    uuid: generatePlaylistUUID('Playlist 1'),
     title: 'Playlist 1',
     songs: [
       SongData(
@@ -72,4 +74,11 @@ StreamData getSampleStreamData() {
     version: "2025-1.0", token: "token123",
     users: [],
   );
+}
+
+String generatePlaylistUUID(String title) {
+  var time = DateTime.now().microsecondsSinceEpoch;
+  var randomPart = math.Random().nextInt(100000);
+  var uuid0 = '$title-$time-$randomPart';
+  return base64Url.encode(uuid0.codeUnits);
 }

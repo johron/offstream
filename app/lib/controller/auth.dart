@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
 import 'package:offstream/controller/storage.dart';
+import 'package:offstream/controller/user_controller.dart';
 import 'package:offstream/type/configuration_data.dart';
 import 'package:offstream/type/local_store.dart';
 import 'package:offstream/type/user_data.dart';
@@ -35,6 +36,11 @@ class AuthController {
 
   void init() {
     var storage = StorageController();
+    var userController = UserController();
+
+    userController.onUserUpdated.listen((userData) {
+      _loggedInUser = AuthUser(user: userData, isAuthenticated: _loggedInUser?.isAuthenticated ?? false);
+    });
 
     // var newUser = UserData(
     //   username: "username",

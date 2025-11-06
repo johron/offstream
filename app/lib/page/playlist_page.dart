@@ -12,7 +12,7 @@ import '../util/util.dart';
 class PlaylistPage extends StatefulWidget {
   final PlaylistData playlist;
 
-  const PlaylistPage({
+  PlaylistPage({
     required this.playlist,
     super.key
   });
@@ -22,14 +22,11 @@ class PlaylistPage extends StatefulWidget {
 }
 
 class _PlaylistPageState extends State<PlaylistPage> {
-  late PlaylistData playlist;
-
   final PlaybackController _controller = PlaybackController();
 
   @override
   void initState() {
     super.initState();
-    playlist = widget.playlist;
   }
 
   @override
@@ -54,13 +51,13 @@ class _PlaylistPageState extends State<PlaylistPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(playlist.title,
-                        style: TextStyle(fontSize: calculateTitleFontSize(playlist.title),
+                      Text(widget.playlist.title,
+                        style: TextStyle(fontSize: calculateTitleFontSize(widget.playlist.title),
                             fontWeight: FontWeight.bold),
                         softWrap: true,
                       ),
                       Text(
-                          '${playlist.songs.length} ${playlist.songs.length == 1 ? 'song' : 'songs'}',
+                          '${widget.playlist.songs.length} ${widget.playlist.songs.length == 1 ? 'song' : 'songs'}',
                           style: TextStyle(fontSize: 16, color: Colors.white70)),
                       // calculate total duration
                     ],
@@ -124,7 +121,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
   List<DataRow> _buildSongRows() {
     List<DataRow> rows = [];
-    for (SongData data in playlist.songs) {
+    for (SongData data in widget.playlist.songs) {
       rows.add(DataRow(cells: [
         DataCell(
           Row(
@@ -133,7 +130,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 width: 40,
                 alignment: Alignment.center,
                 child: IndexAndPlay(
-                  index: playlist.songs.indexOf(data),
+                  index: widget.playlist.songs.indexOf(data),
                   onPlay: () {
                     _controller.song(data);
                   }

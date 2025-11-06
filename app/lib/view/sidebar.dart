@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/component/playlist_create_dialog.dart';
+import 'package:offstream/controller/user_controller.dart';
 
 import 'package:offstream/type/page.dart';
 import 'package:offstream/util/util.dart';
@@ -20,18 +21,24 @@ class Sidebar extends StatefulWidget {
 
   @override
   State<Sidebar> createState() => _SidebarState();
-
 }
 
 class _SidebarState extends State<Sidebar> {
   late OPage selectedPage;
+
+  final AuthController auth = AuthController();
+  final UserController user = UserController();
 
   @override
   void initState() {
     super.initState();
     selectedPage = widget.initialPage;
 
-    AuthController().onAuthenticatedStream.listen((event) {
+    auth.onAuthenticatedStream.listen((event) {
+      updateState();
+    });
+
+    user.onUserUpdated.listen((event) {
       updateState();
     });
   }
@@ -41,9 +48,11 @@ class _SidebarState extends State<Sidebar> {
   }
 
   void _changePage(OPage page) {
-    setState(() {
-      selectedPage = page;
-    });
+    if (selectedPage.playlist?.uuid == page.playlist?.uuid && selectedPage.page == page.page) {
+      return;
+    }
+
+    selectedPage = page;
     widget.onPageSelected?.call(selectedPage);
   }
 
@@ -82,9 +91,21 @@ class _SidebarState extends State<Sidebar> {
           ),
           Divider(color: Colors.grey[700]),
           Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              children: getPlaylists(),
+            child: FutureBuilder<List<ListTile>>(
+              future: getPlaylists(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Failed to load playlists'));
+                } else {
+                  final playlists = snapshot.data ?? <ListTile>[];
+                  return ListView(
+                    shrinkWrap: true,
+                    children: playlists,
+                  );
+                }
+              },
             ),
           ),
         ],
@@ -92,15 +113,16 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
-  List<ListTile> getPlaylists() {
-    var auth = AuthController();
-    if (auth.loggedInUser == null || !auth.loggedInUser!.isAuthenticated) {
+  Future<List<ListTile>> getPlaylists() async {
+    var userData = await user.user;
+
+    if (!auth.loggedInUser!.isAuthenticated) {
       return [];
     }
 
     List<ListTile> playlists = [];
 
-    for (var playlist in auth.loggedInUser!.user.playlists) {
+    for (var playlist in userData.playlists) {
       playlists.add(
         ListTile(
             leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),

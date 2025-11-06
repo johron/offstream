@@ -49,9 +49,8 @@ class _OffstreamAppState extends State<OffstreamApp> {
             Sidebar(
               initialPage: _selectedPage,
               onPageSelected: (page) {
-                setState(() {
                   _selectedPage = page;
-                });
+                setState(() {});
               },
             ),
             Expanded(child: Container(
