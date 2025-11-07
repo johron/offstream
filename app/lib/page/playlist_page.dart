@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/controller/playback.dart';
 import 'package:offstream/component/index_and_play.dart';
+import 'package:offstream/controller/user_controller.dart';
 import 'package:offstream/type/playlist_data.dart';
 import 'package:offstream/util/color.dart';
 
@@ -74,16 +75,26 @@ class _PlaylistPageState extends State<PlaylistPage> {
           children: [
             SizedBox(width: 30),
             IconButton(
-              icon: Icon(Icons.play_circle, size: 70, color: getToggledColor()),
+              icon: Icon(Icons.play_circle_rounded, size: 70, color: getToggledColor()),
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.shuffle, size: 30, color: Colors.white70),
+              icon: Icon(Icons.shuffle_rounded, size: 30, color: Colors.white70),
               onPressed: () {},
             ),
             IconButton(
               icon: Icon(Icons.push_pin_rounded, size: 30, color: Colors.white70),
               onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.delete_forever_rounded, size: 30, color: Colors.white70),
+              onPressed: () {
+                UserController().deletePlaylist(widget.playlist.uuid).then((success) {
+                  if (success) {
+
+                  }
+                });
+              },
             ),
             //Expanded(child: Container()),
             SizedBox(width: 30)

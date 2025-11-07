@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/component/dialog/user_pin_dialog.dart';
 import 'package:offstream/controller/auth.dart';
 import 'package:offstream/controller/playback.dart';
 import 'package:offstream/controller/storage.dart';
+import 'package:offstream/controller/user_controller.dart';
 import 'package:offstream/page/settings_page.dart';
 import 'package:offstream/type/page.dart';
 import 'package:offstream/type/stream_data.dart';
@@ -13,13 +15,15 @@ import 'package:offstream/view/sidebar.dart';
 
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 
+import 'component/pin.dart';
+
 void main() async {
   JustAudioMediaKit.ensureInitialized();
 
   //await StorageController().saveStream(getSampleStreamData());
   await StorageController().init();
 
-  AuthController().init();
+  await AuthController().init();
   PlaybackController().init();
 
   runApp(const OffstreamApp());
@@ -36,6 +40,18 @@ class _OffstreamAppState extends State<OffstreamApp> {
   OPage _selectedPage = OPage(Pages.library, null);
 
   @override
+  void initState() {
+    UserController().onUserDeletedPlaylist.listen((_) {
+      if (_selectedPage.page == Pages.playlist) {
+        _selectedPage = OPage(Pages.library, null);
+        setState(() {});
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const String appTitle = 'Offstream';
 
@@ -46,10 +62,11 @@ class _OffstreamAppState extends State<OffstreamApp> {
         body: Flex(
           direction: Axis.horizontal,
           children: [
+            Pin(),
             Sidebar(
               initialPage: _selectedPage,
               onPageSelected: (page) {
-                  _selectedPage = page;
+                _selectedPage = page;
                 setState(() {});
               },
             ),

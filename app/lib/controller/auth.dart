@@ -34,53 +34,22 @@ class AuthController {
 
   Stream<AuthUser?> get onAuthenticatedStream => _authenticatedStateController.stream;
 
-  void init() {
+  Future<void> init() async {
     var storage = StorageController();
     var userController = UserController();
 
     userController.onUserUpdated.listen((userData) {
-      _loggedInUser = AuthUser(user: userData, isAuthenticated: _loggedInUser?.isAuthenticated ?? false);
+      _loggedInUser = AuthUser(user: userData,
+          isAuthenticated: _loggedInUser?.isAuthenticated ?? false);
     });
 
-    // var newUser = UserData(
-    //   username: "username",
-    //   //pin: hashSha256(1234.toString()),
-    //   playlists: [
-    //     getSamplePlaylist(),
-    //   ],
-    //   configuration: ConfigurationData(),
-    // );
-    // storage.addUser(newUser);
+    var localStore = await storage.loadLocalStore();
+    if (localStore == null) {
+      return;
+    }
 
-    var user = storage.loadLocalStore().then((localStore) {
-      if (localStore == null) {
-        return null;
-      }
-
-      var username = localStore.loggedInUser;
-      var streamData = storage.loadStream();
-
-      return streamData.then((data) {
-        if (data == null) {
-          return null;
-        }
-
-        for (var user in data.users) {
-          if (user.username == username) {
-            return AuthUser(user: user, isAuthenticated: user.pin == null);
-          }
-        }
-
-        return null;
-      });
-    });
-
-    user.then((authUser) {
-      if (authUser != null) {
-        _loggedInUser = authUser;
-        _authenticatedStateController.add(_loggedInUser);
-      }
-    });
+    var username = localStore.loggedInUser;
+    await login(username);
   }
 
   String hashSha256(String input) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/component/dialog/user_create_dialog.dart';
 import 'package:offstream/component/settings/settings_button.dart';
 import 'package:offstream/component/settings/settings_dropdown.dart';
 import 'package:offstream/component/settings/settings_signup.dart';
@@ -6,6 +7,7 @@ import 'package:offstream/component/settings/settings_toggle.dart';
 import 'package:offstream/controller/auth.dart';
 import 'package:offstream/controller/storage.dart';
 
+import '../component/dialog/user_pin_dialog.dart';
 import '../component/settings/settings_label.dart';
 import '../component/settings/settings_text.dart';
 import '../type/stream_data.dart';
@@ -65,10 +67,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     description: "Login",
                     onChanged: (username) {
                       AuthController().login(username!).then((success) {
+                        if (AuthController().loggedInUser != null && AuthController().loggedInUser!.isAuthenticated == false ) {
+                          showDialog(context: context, builder: (context) {
+                            return UserPinDialog();
+                          });
+                        }
                         final snackBar = SnackBar(
                           content: Text(success ? "Login successful" : "Login failed"),
                         );
-                        updateState();
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       });
                       updateState();
@@ -78,42 +84,28 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             )
           : SettingsButton(
-              buttonText: "Logout",
-              description: "Logged in as '${AuthController().loggedInUser!.user.username}'",
-              onPressed: () {
-                var success = AuthController().logout();
-                updateState();
-                final snackBar = SnackBar(
-                  content: Text(success ? "Logged out" : "Logout failed"),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              },
-            ),
+            buttonText: "Logout",
+            description: "Logged in as '${AuthController().loggedInUser!.user.username}'",
+            onPressed: () {
+              var success = AuthController().logout();
+              updateState();
+              final snackBar = SnackBar(
+                content: Text(success ? "Logged out" : "Logout failed"),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            },
+          ),
 
-        AuthController().loggedInUser != null && !AuthController().loggedInUser!.isAuthenticated
-          ? SettingsText(
-              value: "",
-              description: "Enter PIN",
-              onChanged: (pin) {
-                var success = AuthController().verifyPin(pin);
-                final snackBar = SnackBar(
-                  content: Text(success ? "PIN correct, logged in" : "Incorrect PIN"),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                updateState();
-              },
-            )
-          : Container(),
+        SizedBox(height: 10),
 
-        SettingsSignup(
-          description: "Create User",
-          onSignup: (username, pin) {
-            var success = AuthController().signup(username, pin);
-            final snackBar = SnackBar(
-              content: Text(success ? "Signup successful" : "Signup failed"),
-            );
+        SettingsButton(
+          buttonText: 'Create',
+          description: 'Create User',
+          onPressed: () {
+            showDialog(context: context, builder: (context) {
+              return UserCreateDialog();
+            });
             updateState();
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           },
         ),
 

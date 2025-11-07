@@ -19,7 +19,10 @@ class UserController {
   final StorageController storage = StorageController();
 
   final _userUpdateController = StreamController<UserData>.broadcast();
+  final _userDeletePlaylistController = StreamController<void>.broadcast();
+
   Stream<UserData> get onUserUpdated => _userUpdateController.stream;
+  Stream<void> get onUserDeletedPlaylist => _userDeletePlaylistController.stream;
 
   // getter for AuthController find loggedInUser
   Future<UserData> get user async {
@@ -63,6 +66,27 @@ class UserController {
     );
 
     updateUser(updatedUser);
+
+    return true;
+  }
+
+  Future<bool> deletePlaylist(String playlistUUID) async {
+    var stream = await storage.loadStream();
+    if (stream == null) {
+      return false;
+    }
+
+    var user = await this.user;
+    var updatedPlaylists = user.playlists.where((p) => p.uuid != playlistUUID).toList();
+    var updatedUser = UserData(
+      username: user.username,
+      pin: user.pin,
+      playlists: updatedPlaylists,
+      configuration: user.configuration,
+    );
+    updateUser(updatedUser);
+
+    _userDeletePlaylistController.add(null);
 
     return true;
   }

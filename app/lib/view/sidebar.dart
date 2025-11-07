@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/component/playlist_create_dialog.dart';
+import 'package:offstream/component/dialog/playlist_create_dialog.dart';
 import 'package:offstream/controller/user_controller.dart';
 
 import 'package:offstream/type/page.dart';
@@ -91,21 +91,9 @@ class _SidebarState extends State<Sidebar> {
           ),
           Divider(color: Colors.grey[700]),
           Expanded(
-            child: FutureBuilder<List<ListTile>>(
-              future: getPlaylists(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Failed to load playlists'));
-                } else {
-                  final playlists = snapshot.data ?? <ListTile>[];
-                  return ListView(
-                    shrinkWrap: true,
-                    children: playlists,
-                  );
-                }
-              },
+            child: ListView(
+              shrinkWrap: true,
+              children: getPlaylists(),
             ),
           ),
         ],
@@ -113,8 +101,10 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
-  Future<List<ListTile>> getPlaylists() async {
-    var userData = await user.user;
+  List<ListTile> getPlaylists() {
+    if (auth.loggedInUser == null) {
+      return [];
+    }
 
     if (!auth.loggedInUser!.isAuthenticated) {
       return [];
@@ -122,17 +112,18 @@ class _SidebarState extends State<Sidebar> {
 
     List<ListTile> playlists = [];
 
+    var userData = auth.loggedInUser!.user;
+
     for (var playlist in userData.playlists) {
       playlists.add(
         ListTile(
             leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),
             title: Text(playlist.title),
-            selected: selectedPage.page == Pages.playlist && selectedPage.playlist == playlist,
+            selected: selectedPage.page == Pages.playlist && selectedPage.playlist?.uuid == playlist.uuid,
             onTap: () => _changePage(OPage(Pages.playlist, playlist)
-        )),
+            )),
       );
     }
-
     return playlists;
-  }
+}
 }
