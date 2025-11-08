@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/component/dialog/playlist_create_dialog.dart';
+import 'package:offstream/component/playlist.dart';
 import 'package:offstream/component/snackbar.dart';
 import 'package:offstream/controller/user_controller.dart';
 
@@ -7,7 +8,7 @@ import 'package:offstream/type/page.dart';
 import 'package:offstream/util/util.dart';
 
 import '../component/rounded.dart';
-import '../controller/auth.dart';
+import '../controller/auth_controller.dart';
 import '../type/playlist_data.dart';
 
 class Sidebar extends StatefulWidget {
@@ -40,6 +41,11 @@ class _SidebarState extends State<Sidebar> {
     });
 
     user.onUserUpdated.listen((event) {
+      updateState();
+    });
+
+    user.onUserSelectedPage.listen((page) {
+      selectedPage = page;
       updateState();
     });
   }
@@ -102,7 +108,7 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
-  List<GestureDetector> getPlaylists() {
+  List<Playlist> getPlaylists() {
     if (auth.loggedInUser == null) {
       return [];
     }
@@ -111,43 +117,18 @@ class _SidebarState extends State<Sidebar> {
       return [];
     }
 
-    List<GestureDetector> playlists = [];
+    List<Playlist> playlists = [];
 
     var userData = auth.loggedInUser!.user;
 
     for (var playlist in userData.playlists) {
       playlists.add(
-        GestureDetector(
-          onSecondaryTapDown: (details) async {
-            final RenderBox overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
-            final selected = await showMenu<String>(
-              context: context,
-              position: RelativeRect.fromRect(
-                details.globalPosition & const Size(1, 1),
-                Offset.zero & overlay.size,
-              ),
-              items: const [
-                PopupMenuItem(value: 'rename', child: Text('Rename')),
-                PopupMenuItem(value: 'delete', child: Text('Delete')),
-              ],
-            );
-            if (selected == 'rename') {
-              print('Rename playlist: ${playlist.title}');
-            } else if (selected == 'delete') {
-              UserController().deletePlaylist(playlist.uuid).then((success) {
-                if (!success) {
-                  OSnackBar(message: "Failed to delete playlist '${playlist.title}'").show(context);
-                }
-              });
-            }
-          },
-          child: ListTile(
-            leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),
-            title: Text(playlist.title),
-            selected: selectedPage.page == Pages.playlist && selectedPage.playlist?.uuid == playlist.uuid,
-            onTap: () => _changePage(OPage(Pages.playlist, playlist)),
-          ),
-        ),
+        Playlist(playlist: playlist, widget: ListTile(
+          leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),
+          title: Text(playlist.title),
+          selected: selectedPage.page == Pages.playlist && selectedPage.playlist?.uuid == playlist.uuid,
+          onTap: () => _changePage(OPage(Pages.playlist, playlist)),
+        ))
       );
     }
     return playlists;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/component/snackbar.dart';
 
-import '../../controller/auth.dart';
+import '../../controller/auth_controller.dart';
 
 class UserPinDialog extends StatefulWidget {
   late String pin;

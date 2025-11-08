@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/controller/storage.dart';
+import 'package:offstream/controller/storage_controller.dart';
 import 'package:offstream/controller/user_controller.dart';
 import 'package:offstream/util/util.dart';
 
-import '../../controller/auth.dart';
+import '../../controller/auth_controller.dart';
 import '../snackbar.dart';
 
 class PlaylistCreateDialog extends StatefulWidget {

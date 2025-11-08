@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
-import 'package:offstream/controller/storage.dart';
+import 'package:offstream/controller/storage_controller.dart';
 import 'package:offstream/controller/user_controller.dart';
 import 'package:offstream/type/configuration_data.dart';
 import 'package:offstream/type/local_store.dart';

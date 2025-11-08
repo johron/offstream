@@ -4,8 +4,8 @@ import 'package:offstream/component/settings/settings_button.dart';
 import 'package:offstream/component/settings/settings_dropdown.dart';
 import 'package:offstream/component/settings/settings_signup.dart';
 import 'package:offstream/component/settings/settings_toggle.dart';
-import 'package:offstream/controller/auth.dart';
-import 'package:offstream/controller/storage.dart';
+import 'package:offstream/controller/auth_controller.dart';
+import 'package:offstream/controller/storage_controller.dart';
 import 'package:offstream/util/util.dart';
 
 import '../component/dialog/user_pin_dialog.dart';

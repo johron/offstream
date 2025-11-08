@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/controller/playback.dart';
+import 'package:offstream/controller/playback_controller.dart';
 import 'package:offstream/component/index_and_play.dart';
 import 'package:offstream/controller/user_controller.dart';
 import 'package:offstream/type/playlist_data.dart';

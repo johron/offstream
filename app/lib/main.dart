@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/component/dialog/user_pin_dialog.dart';
-import 'package:offstream/controller/auth.dart';
-import 'package:offstream/controller/playback.dart';
-import 'package:offstream/controller/storage.dart';
+import 'package:offstream/controller/auth_controller.dart';
+import 'package:offstream/controller/playback_controller.dart';
+import 'package:offstream/controller/storage_controller.dart';
 import 'package:offstream/controller/user_controller.dart';
+import 'package:offstream/page/library_page.dart';
 import 'package:offstream/page/settings_page.dart';
 import 'package:offstream/type/page.dart';
 import 'package:offstream/type/stream_data.dart';
@@ -39,16 +40,27 @@ class OffstreamApp extends StatefulWidget {
 class _OffstreamAppState extends State<OffstreamApp> {
   OPage _selectedPage = OPage(Pages.library, null);
 
+  final UserController userController = UserController();
+
   @override
   void initState() {
-    UserController().onUserDeletedPlaylist.listen((_) {
+    userController.onUserDeletedPlaylist.listen((_) {
       if (_selectedPage.page == Pages.playlist) {
         _selectedPage = OPage(Pages.library, null);
         setState(() {});
       }
     });
 
+    userController.onUserSelectedPage.listen((page) {
+      _selectedPage = page;
+      updateState();
+    });
+
     super.initState();
+  }
+
+  void updateState() {
+    setState(() {});
   }
 
   @override
@@ -67,7 +79,7 @@ class _OffstreamAppState extends State<OffstreamApp> {
               initialPage: _selectedPage,
               onPageSelected: (page) {
                 _selectedPage = page;
-                setState(() {});
+                updateState();
               },
             ),
             Expanded(child: Container(
@@ -84,7 +96,7 @@ class _OffstreamAppState extends State<OffstreamApp> {
     // Return different widgets based on selected page
     switch (_selectedPage.page) {
       case Pages.library:
-        return Text('Library Content');
+        return LibraryPage();
       case Pages.search:
         return Text('Search Content');
       case Pages.settings:

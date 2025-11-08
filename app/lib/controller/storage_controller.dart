@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:offstream/controller/auth.dart';
+import 'package:offstream/controller/auth_controller.dart';
 import 'package:offstream/type/local_store.dart';
 import 'package:offstream/util/constants.dart';
 import 'package:path_provider/path_provider.dart';

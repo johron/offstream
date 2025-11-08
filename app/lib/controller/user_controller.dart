@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:offstream/controller/auth.dart';
-import 'package:offstream/controller/storage.dart';
+import 'package:offstream/controller/auth_controller.dart';
+import 'package:offstream/controller/storage_controller.dart';
 import 'package:offstream/util/util.dart';
 
+import '../type/page.dart';
 import '../type/playlist_data.dart';
 import '../type/stream_data.dart';
 import '../type/user_data.dart';
@@ -21,8 +22,13 @@ class UserController {
   final _userUpdateController = StreamController<UserData>.broadcast();
   final _userDeletePlaylistController = StreamController<void>.broadcast();
 
+  StreamController<OPage> userSelectedPageController = StreamController<OPage>.broadcast();
+
   Stream<UserData> get onUserUpdated => _userUpdateController.stream;
   Stream<void> get onUserDeletedPlaylist => _userDeletePlaylistController.stream;
+  Stream<OPage> get onUserSelectedPage => userSelectedPageController.stream;
+
+
 
   // getter for AuthController find loggedInUser
   Future<UserData> get user async {
