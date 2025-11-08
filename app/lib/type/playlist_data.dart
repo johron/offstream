@@ -1,4 +1,4 @@
-import 'package:offstream/type/song_data.dart';
+import 'package:peik/type/song_data.dart';
 
 import '../util/util.dart';
 

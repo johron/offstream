@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/component/dialog/playlist_create_dialog.dart';
-import 'package:offstream/component/playlist.dart';
-import 'package:offstream/component/snackbar.dart';
-import 'package:offstream/controller/user_controller.dart';
+import 'package:peik/component/dialog/playlist_create_dialog.dart';
+import 'package:peik/component/playlist.dart';
+import 'package:peik/component/snackbar.dart';
+import 'package:peik/controller/user_controller.dart';
 
-import 'package:offstream/type/page.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/type/page.dart';
+import 'package:peik/util/util.dart';
 
 import '../component/rounded.dart';
 import '../controller/auth_controller.dart';

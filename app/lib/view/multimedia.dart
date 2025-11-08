@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:offstream/controller/playback_controller.dart';
-import 'package:offstream/component/rounded.dart';
-import 'package:offstream/util/color.dart';
-import 'package:offstream/util/time.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/controller/playback_controller.dart';
+import 'package:peik/component/rounded.dart';
+import 'package:peik/util/color.dart';
+import 'package:peik/util/time.dart';
+import 'package:peik/util/util.dart';
 
 class Multimedia extends StatefulWidget {
   const Multimedia({super.key});

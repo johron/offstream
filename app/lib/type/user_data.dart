@@ -1,4 +1,4 @@
-import 'package:offstream/type/playlist_data.dart';
+import 'package:peik/type/playlist_data.dart';
 
 import 'configuration_data.dart';
 

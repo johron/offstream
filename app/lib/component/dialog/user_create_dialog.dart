@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/component/snackbar.dart';
+import 'package:peik/component/snackbar.dart';
 
 import '../../controller/auth_controller.dart';
 
@@ -49,11 +49,11 @@ class _UserCreateDialogState extends State<UserCreateDialog> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (widget.username.isEmpty) {
                   return;
                 }
-                var success = AuthController().signup(widget.username, widget.pin);
+                var success = await AuthController().signup(widget.username, widget.pin);
                 OSnackBar(message: success ? "Signup successful" : "Signup failed").show(context);
                 updateState();
                 Navigator.of(context).pop();

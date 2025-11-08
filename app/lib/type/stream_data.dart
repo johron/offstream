@@ -1,5 +1,5 @@
-import 'package:offstream/type/song_data.dart';
-import 'package:offstream/type/user_data.dart';
+import 'package:peik/type/song_data.dart';
+import 'package:peik/type/user_data.dart';
 
 class StreamData {
   final int lastUpdate;

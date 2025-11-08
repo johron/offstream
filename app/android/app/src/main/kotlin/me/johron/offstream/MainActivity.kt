@@ -1,4 +1,4 @@
-package me.johron.offstream
+package me.johron.peik
 
 import io.flutter.embedding.android.FlutterActivity
 

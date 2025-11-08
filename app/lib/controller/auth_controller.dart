@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
-import 'package:offstream/controller/storage_controller.dart';
-import 'package:offstream/controller/user_controller.dart';
-import 'package:offstream/type/configuration_data.dart';
-import 'package:offstream/type/local_store.dart';
-import 'package:offstream/type/user_data.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/controller/storage_controller.dart';
+import 'package:peik/controller/user_controller.dart';
+import 'package:peik/type/configuration_data.dart';
+import 'package:peik/type/local_store.dart';
+import 'package:peik/type/user_data.dart';
+import 'package:peik/util/util.dart';
 
 class AuthUser {
   final UserData user;
@@ -77,33 +77,30 @@ class AuthController {
     return token;
   }
 
-  bool signup(String username, String? pin) {
+  Future<bool> signup(String username, String? pin) async {
     var storage = StorageController();
 
-    storage.loadStream().then((data) {
-      if (data == null) {
+    var stream = await storage.loadStream();
+    if (stream == null) {
+      return false;
+    }
+
+    for (var user in stream.users) {
+      if (user.username == username) {
         return false;
       }
+    }
 
-      for (var user in data.users) {
-        if (user.username == username) {
-          return false;
-        }
-      }
+    var newUser = UserData(
+      username: username,
+      playlists: [],
+      configuration: ConfigurationData(),
+      pin: pin != null ? hashSha256(pin) : null,
+    );
 
-      var newUser = UserData(
-        username: username,
-        playlists: [],
-        configuration: ConfigurationData(),
-        pin: pin != null ? hashSha256(pin) : null,
-      );
+    await storage.addUser(newUser);
 
-      storage.addUser(newUser);
-
-      _loggedInUser = AuthUser(user: newUser, isAuthenticated: pin == null);
-
-      return true;
-    });
+    await login(username);
 
     return true;
   }

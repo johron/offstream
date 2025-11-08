@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/component/dialog/user_create_dialog.dart';
-import 'package:offstream/component/settings/settings_button.dart';
-import 'package:offstream/component/settings/settings_dropdown.dart';
-import 'package:offstream/component/settings/settings_signup.dart';
-import 'package:offstream/component/settings/settings_toggle.dart';
-import 'package:offstream/controller/auth_controller.dart';
-import 'package:offstream/controller/storage_controller.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/component/dialog/user_create_dialog.dart';
+import 'package:peik/component/settings/settings_button.dart';
+import 'package:peik/component/settings/settings_dropdown.dart';
+import 'package:peik/component/settings/settings_signup.dart';
+import 'package:peik/component/settings/settings_toggle.dart';
+import 'package:peik/controller/auth_controller.dart';
+import 'package:peik/controller/storage_controller.dart';
+import 'package:peik/util/util.dart';
 
 import '../component/dialog/user_pin_dialog.dart';
 import '../component/settings/settings_label.dart';

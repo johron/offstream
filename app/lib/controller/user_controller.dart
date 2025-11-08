@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:offstream/controller/auth_controller.dart';
-import 'package:offstream/controller/storage_controller.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/controller/auth_controller.dart';
+import 'package:peik/controller/storage_controller.dart';
+import 'package:peik/util/util.dart';
 
 import '../type/page.dart';
 import '../type/playlist_data.dart';

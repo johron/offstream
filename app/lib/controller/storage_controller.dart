@@ -2,11 +2,11 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:offstream/controller/auth_controller.dart';
-import 'package:offstream/type/local_store.dart';
-import 'package:offstream/util/constants.dart';
+import 'package:peik/controller/auth_controller.dart';
+import 'package:peik/type/local_store.dart';
+import 'package:peik/util/constants.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:offstream/type/stream_data.dart';
+import 'package:peik/type/stream_data.dart';
 
 import '../type/playlist_data.dart';
 import '../type/user_data.dart';
@@ -37,28 +37,28 @@ class StorageController {
   }
 
   Future<String> get _localPath async {
-    // Linux: ~/.config/offstream
-    // Windows: %APPDATA%\Offstream
-    // macOS: ~/Library/Application Support/Offstream
+    // Linux: ~/.config/peik
+    // Windows: %APPDATA%\Peik
+    // macOS: ~/Library/Application Support/Peik
     // Android/iOS and others: use path_provider
 
     if (Platform.isLinux) {
       final home = Platform.environment['HOME'] ?? '.';
-      final dir = Directory('$home/.config/offstream');
+      final dir = Directory('$home/.config/peik');
       if (!await dir.exists()) await dir.create(recursive: true);
       return dir.path;
     }
 
     if (Platform.isWindows) {
       final appData = Platform.environment['APPDATA'] ?? Platform.environment['USERPROFILE'] ?? '.';
-      final dir = Directory('$appData${Platform.pathSeparator}Offstream');
+      final dir = Directory('$appData${Platform.pathSeparator}Peik');
       if (!await dir.exists()) await dir.create(recursive: true);
       return dir.path;
     }
 
     if (Platform.isMacOS) {
       final home = Platform.environment['HOME'] ?? '.';
-      final dir = Directory('$home/Library/Application Support/Offstream');
+      final dir = Directory('$home/Library/Application Support/Peik');
       if (!await dir.exists()) await dir.create(recursive: true);
       return dir.path;
     }
@@ -118,21 +118,19 @@ class StorageController {
     }
   }
 
-  bool addUser(UserData user) {
-    loadStream().then((data) {
-      if (data == null) {
-        print("No stream data available to add user.");
-        return false;
-      }
+  Future<bool> addUser(UserData user) async {
+    var stream = await loadStream();
+    if (stream == null) {
+      print("No stream data available to add user.");
+      return false;
+    }
 
-      var newStream = data;
-      newStream.users.add(user);
+    var newStream = stream;
+    newStream.users.add(user);
 
-      saveStream(newStream);
+    saveStream(newStream);
 
-      print("User ${user.username} added successfully.");
-      return true;
-    });
+    print("User ${user.username} added successfully.");
 
     return true;
   }

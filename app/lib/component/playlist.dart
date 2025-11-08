@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/component/snackbar.dart';
-import 'package:offstream/type/playlist_data.dart';
+import 'package:peik/component/snackbar.dart';
+import 'package:peik/type/playlist_data.dart';
 
 import '../controller/user_controller.dart';
 

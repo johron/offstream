@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/controller/playback_controller.dart';
-import 'package:offstream/component/index_and_play.dart';
-import 'package:offstream/controller/user_controller.dart';
-import 'package:offstream/type/playlist_data.dart';
-import 'package:offstream/util/color.dart';
+import 'package:peik/controller/playback_controller.dart';
+import 'package:peik/component/index_and_play.dart';
+import 'package:peik/controller/user_controller.dart';
+import 'package:peik/type/playlist_data.dart';
+import 'package:peik/util/color.dart';
 
 import '../component/rounded.dart';
 import '../type/song_data.dart';

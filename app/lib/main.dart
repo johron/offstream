@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/component/dialog/user_pin_dialog.dart';
-import 'package:offstream/controller/auth_controller.dart';
-import 'package:offstream/controller/playback_controller.dart';
-import 'package:offstream/controller/storage_controller.dart';
-import 'package:offstream/controller/user_controller.dart';
-import 'package:offstream/page/library_page.dart';
-import 'package:offstream/page/settings_page.dart';
-import 'package:offstream/type/page.dart';
-import 'package:offstream/type/stream_data.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/component/dialog/user_pin_dialog.dart';
+import 'package:peik/controller/auth_controller.dart';
+import 'package:peik/controller/playback_controller.dart';
+import 'package:peik/controller/storage_controller.dart';
+import 'package:peik/controller/user_controller.dart';
+import 'package:peik/page/library_page.dart';
+import 'package:peik/page/settings_page.dart';
+import 'package:peik/type/page.dart';
+import 'package:peik/type/stream_data.dart';
+import 'package:peik/util/util.dart';
 
-import 'package:offstream/view/multimedia.dart';
-import 'package:offstream/page/playlist_page.dart';
-import 'package:offstream/view/sidebar.dart';
+import 'package:peik/view/multimedia.dart';
+import 'package:peik/page/playlist_page.dart';
+import 'package:peik/view/sidebar.dart';
 
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 
@@ -27,17 +27,17 @@ void main() async {
   await AuthController().init();
   PlaybackController().init();
 
-  runApp(const OffstreamApp());
+  runApp(const PeikApp());
 }
 
-class OffstreamApp extends StatefulWidget {
-  const OffstreamApp({super.key});
+class PeikApp extends StatefulWidget {
+  const PeikApp({super.key});
 
   @override
-  State<OffstreamApp> createState() => _OffstreamAppState();
+  State<PeikApp> createState() => _PeikAppState();
 }
 
-class _OffstreamAppState extends State<OffstreamApp> {
+class _PeikAppState extends State<PeikApp> {
   OPage _selectedPage = OPage(Pages.library, null);
 
   final UserController userController = UserController();
@@ -65,7 +65,7 @@ class _OffstreamAppState extends State<OffstreamApp> {
 
   @override
   Widget build(BuildContext context) {
-    const String appTitle = 'Offstream';
+    const String appTitle = 'Peik';
 
     return MaterialApp(
       title: appTitle,

@@ -3,10 +3,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:offstream/type/configuration_data.dart';
-import 'package:offstream/type/playlist_data.dart';
-import 'package:offstream/type/song_data.dart';
-import 'package:offstream/type/user_data.dart';
+import 'package:peik/type/configuration_data.dart';
+import 'package:peik/type/playlist_data.dart';
+import 'package:peik/type/song_data.dart';
+import 'package:peik/type/user_data.dart';
 
 import '../type/stream_data.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/component/playlist.dart';
-import 'package:offstream/controller/user_controller.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/component/playlist.dart';
+import 'package:peik/controller/user_controller.dart';
+import 'package:peik/util/util.dart';
 
 import '../component/dialog/song_import_dialog.dart';
 import '../component/rounded.dart';

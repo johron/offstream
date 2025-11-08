@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/component/snackbar.dart';
+import 'package:peik/component/snackbar.dart';
 
 import '../../controller/auth_controller.dart';
 

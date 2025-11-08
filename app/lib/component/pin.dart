@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/util/util.dart';
 
 import '../controller/auth_controller.dart';
 import 'dialog/user_pin_dialog.dart';

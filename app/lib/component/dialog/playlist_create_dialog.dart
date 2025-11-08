@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:offstream/controller/storage_controller.dart';
-import 'package:offstream/controller/user_controller.dart';
-import 'package:offstream/util/util.dart';
+import 'package:peik/controller/storage_controller.dart';
+import 'package:peik/controller/user_controller.dart';
+import 'package:peik/util/util.dart';
 
 import '../../controller/auth_controller.dart';
 import '../snackbar.dart';
