@@ -1,4 +1,4 @@
-# Offstream
+# Peik
 
 Local music player and playlist manager powered by Git and Flutter.
 
