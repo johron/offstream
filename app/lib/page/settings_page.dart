@@ -56,27 +56,26 @@ class _SettingsPageState extends State<SettingsPage> {
                   return Text("Error loading users");
                 } else {
                   if (!snapshot.hasData || snapshot.data!.users.isEmpty) {
-                    // return empty widget
                     return Text("No users available. Please sign up.");
                   }
 
-                  final users = snapshot.data?.users;
+                  final users = snapshot.data!.users;
                   return SettingsDropdown(
-                    values: users?.map((e) => e.username).toList() ?? [],
-                    selectedValue: users?.first.username,
+                    values: users.map((e) => e.username).toList(),
+                    selectedValue: users.first.username,
                     description: "Login",
-                    onChanged: (username) {
-                      AuthController().login(username!).then((success) {
-                        if (AuthController().loggedInUser != null && AuthController().loggedInUser!.isAuthenticated == false ) {
-                          showDialog(context: context, builder: (context) {
-                            return UserPinDialog();
-                          });
-                        }
-                        final snackBar = SnackBar(
-                          content: Text(success ? "Login successful" : "Login failed"),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      });
+                    onChanged: (username) async {
+                      final success = await AuthController().login(username!);
+                      if (!mounted) return;
+
+                      if (AuthController().loggedInUser != null && AuthController().loggedInUser!.isAuthenticated == false && mounted) {
+                        await showDialog(context: context, builder: (context) => UserPinDialog());
+                      }
+
+                      final snackBar = SnackBar(
+                        content: Text(success ? "Login successful" : "Login failed"),
+                      );
+                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       updateState();
                     },
                   );
