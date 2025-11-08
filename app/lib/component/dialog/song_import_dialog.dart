@@ -6,17 +6,18 @@ import 'package:offstream/util/util.dart';
 import '../../controller/auth_controller.dart';
 import '../snackbar.dart';
 
-class PlaylistCreateDialog extends StatefulWidget {
-  String name = "Playlist";
-  String description = "";
+class SongImportDialog extends StatefulWidget {
+  String title = "Song";
+  String artist = "Artist";
+  String album = "Album";
 
-  PlaylistCreateDialog({super.key});
+  SongImportDialog({super.key});
 
   @override
-  State<PlaylistCreateDialog> createState() => _PlaylistCreateDialogState();
+  State<SongImportDialog> createState() => _SongImportDialogState();
 }
 
-class _PlaylistCreateDialogState extends State<PlaylistCreateDialog> {
+class _SongImportDialogState extends State<SongImportDialog> {
   void updateState() {
     setState(() {});
   }
@@ -24,14 +25,14 @@ class _PlaylistCreateDialogState extends State<PlaylistCreateDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Create Playlist'),
+      title: Text('Import Song'),
       content: Container(
-        height: 225,
+        height: 260,
         child: Column(
           children: [
             ListTile(
-              title: Text(widget.name == "" ? "Playlist" : widget.name),
-              subtitle: Text(widget.description == "" ? "No description" : widget.description),
+              title: Text(widget.title),
+              subtitle: Text("${widget.artist} (${widget.album})"),
               leading: Image.network(getMissingAlbumArtPath()),
             ),
             TextField(
@@ -39,33 +40,32 @@ class _PlaylistCreateDialogState extends State<PlaylistCreateDialog> {
                 labelText: 'Title',
               ),
               onChanged: (value) {
-                widget.name = value;
+                widget.title = value;
                 updateState();
               },
             ),
             TextField(
               decoration: InputDecoration(
-                labelText: 'Description',
+                labelText: 'Artist',
               ),
               onChanged: (value) {
-                widget.description = value;
+                widget.artist = value;
+                updateState();
+              },
+            ),TextField(
+              decoration: InputDecoration(
+                labelText: 'Album',
+              ),
+              onChanged: (value) {
+                widget.album = value;
                 updateState();
               },
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                print("Create playlist: ${widget.name}, description: ${widget.description}");
+                print("Create song: ${widget.title}, ${widget.artist}, ${widget.album}");
                 Navigator.of(context).pop();
-                if (AuthController().loggedInUser == null) {
-                  OSnackBar(message: "You must be logged in to create a playlist").show(context);
-                  return;
-                }
-                UserController().createPlaylist(widget.name, widget.description).then((success) {
-                  if (!success) {
-                    OSnackBar(message: "Could not create playlist").show(context);
-                  }
-                });
               },
               child: Text('OK'),
             ),

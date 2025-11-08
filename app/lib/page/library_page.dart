@@ -3,6 +3,7 @@ import 'package:offstream/component/playlist.dart';
 import 'package:offstream/controller/user_controller.dart';
 import 'package:offstream/util/util.dart';
 
+import '../component/dialog/song_import_dialog.dart';
 import '../component/rounded.dart';
 import '../controller/auth_controller.dart';
 import '../type/page.dart';
@@ -40,7 +41,7 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: FutureBuilder<List<Playlist>>(
+      child: FutureBuilder<List<Widget>>(
         future: _buildPlaylistCards(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -64,12 +65,36 @@ class _LibraryPageState extends State<LibraryPage> {
     );
   }
 
-  Future<List<Playlist>> _buildPlaylistCards() async {
-    List<Playlist> cards = [];
+  Future<List<Widget>> _buildPlaylistCards() async {
+    List<Widget> cards = [];
 
     var playlists = await userController.user;
 
-    for  (var playlist in playlists.playlists) {
+    cards.add(
+      Card(
+        child: InkWell(
+          highlightColor: Colors.transparent,
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          onTap: () {
+            carefulShowDialog(context: context, builder: (context) {
+              return SongImportDialog();
+            });
+          },
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_rounded, size: 48, color: getToggledColor()),
+                SizedBox(height: 8),
+                Text('Import Song', style: TextStyle(fontSize: 16)),
+              ],
+            ),
+          ),
+        )
+      )
+    );
+
+    for (var playlist in playlists.playlists) { // TODO: Also add a generated playlist with all downloaded songs and add it to the list
       cards.add(
         Playlist(
           playlist: playlist,
