@@ -145,7 +145,6 @@ class _LibraryPageState extends State<LibraryPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       playlist.title,
-                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),

@@ -125,7 +125,7 @@ class _SidebarState extends State<Sidebar> {
       playlists.add(
         Playlist(playlist: playlist, widget: ListTile(
           leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),
-          title: Text(playlist.title),
+          title: Text(playlist.title, overflow: TextOverflow.ellipsis),
           selected: selectedPage.page == Pages.playlist && selectedPage.playlist?.uuid == playlist.uuid,
           onTap: () => _changePage(OPage(Pages.playlist, playlist)),
         ))

@@ -26,9 +26,9 @@ class _SettingsLabelState extends State<SettingsLabel> {
       padding: const EdgeInsets.symmetric(horizontal: 150),
       child: Row(
         children: [
-          Text(widget.description, style: TextStyle(fontSize: 16)),
+          Text(widget.description, style: TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis),
           Expanded(child: Container()),
-          Text(widget.value, style: TextStyle(fontSize: 16, color: Colors.grey)),
+          Text(widget.value, style: TextStyle(fontSize: 16, color: Colors.grey), overflow: TextOverflow.ellipsis),
         ],
       )
     );

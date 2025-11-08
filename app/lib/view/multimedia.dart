@@ -64,8 +64,8 @@ class _MultimediaState extends State<Multimedia> {
                 child: ListTile(
                   //leading: Rounded(child: Image.network(_controller.currentSong!.albumArtPath)),
                   leading: Rounded(child: Image.network(getMissingAlbumArtPath())),
-                  title: Text(_controller.currentSong!.title),
-                  subtitle: Text(_controller.currentSong!.artist),
+                  title: Text(_controller.currentSong!.title, overflow: TextOverflow.ellipsis),
+                  subtitle: Text(_controller.currentSong!.artist, overflow: TextOverflow.ellipsis),
                   trailing: IconButton(icon: Icon(Icons.favorite), onPressed: () {
 
                   }),

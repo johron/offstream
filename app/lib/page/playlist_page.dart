@@ -53,7 +53,8 @@ class _PlaylistPageState extends State<PlaylistPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(widget.playlist.title,
-                        style: TextStyle(fontSize: calculateTitleFontSize(widget.playlist.title),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 56,
                             fontWeight: FontWeight.bold),
                         softWrap: true,
                       ),
@@ -154,16 +155,16 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(data.title, style: TextStyle(color: Colors.white70)),
-                  Text(data.artist, style: TextStyle(color: Colors.white54, fontSize: 12)),
+                  Text(data.title, style: TextStyle(color: Colors.white70), overflow: TextOverflow.ellipsis),
+                  Text(data.artist, style: TextStyle(color: Colors.white54, fontSize: 12), overflow: TextOverflow.ellipsis),
                 ],
               )
             ],
           )
         ),
-        DataCell(Text(data.album, style: TextStyle(color: Colors.white70))),
-        DataCell(Text(formatDateTime(data.added), style: TextStyle(color: Colors.white70))),
-        DataCell(Text(formatDuration(data.duration), style: TextStyle(color: Colors.white70))),
+        DataCell(Text(data.album, style: TextStyle(color: Colors.white70), overflow: TextOverflow.ellipsis)),
+        DataCell(Text(formatDateTime(data.added), style: TextStyle(color: Colors.white70), overflow: TextOverflow.ellipsis)),
+        DataCell(Text(formatDuration(data.duration), style: TextStyle(color: Colors.white70), overflow: TextOverflow.ellipsis)),
       ]));
     }
 

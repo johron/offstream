@@ -25,19 +25,21 @@ class _PlaylistCreateDialogState extends State<PlaylistCreateDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Create Playlist'),
-      content: Container(
-        height: 225,
+      content: SizedBox(
+        height: 260,
+        width: 350,
         child: Column(
           children: [
             ListTile(
-              title: Text(widget.name == "" ? "Playlist" : widget.name),
-              subtitle: Text(widget.description == "" ? "No description" : widget.description),
+              title: Text(widget.name == "" ? "Playlist" : widget.name, overflow: TextOverflow.ellipsis),
+              subtitle: Text(widget.description == "" ? "No description" : widget.description, overflow: TextOverflow.ellipsis,),
               leading: Image.network(getMissingAlbumArtPath()),
             ),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Title',
               ),
+              maxLength: 50,
               onChanged: (value) {
                 widget.name = value;
                 updateState();
@@ -47,6 +49,7 @@ class _PlaylistCreateDialogState extends State<PlaylistCreateDialog> {
               decoration: InputDecoration(
                 labelText: 'Description',
               ),
+              maxLength: 50,
               onChanged: (value) {
                 widget.description = value;
                 updateState();

@@ -29,6 +29,7 @@ class _UsePineDialogState extends State<UserPinDialog> {
               decoration: InputDecoration(
                 labelText: 'PIN',
               ),
+              maxLength: 50,
               onChanged: (value) {
                 widget.pin = value;
                 updateState();

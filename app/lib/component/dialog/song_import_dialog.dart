@@ -26,19 +26,21 @@ class _SongImportDialogState extends State<SongImportDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Import Song'),
-      content: Container(
-        height: 260,
+      content: SizedBox(
+        height: 320,
+        width: 350,
         child: Column(
           children: [
             ListTile(
-              title: Text(widget.title),
-              subtitle: Text("${widget.artist} (${widget.album})"),
+              title: Text(widget.title == "" ? "Song" : widget.title, overflow: TextOverflow.ellipsis),
+              subtitle: Text("${widget.artist == "" ? "Artist" : widget.artist} - ${widget.album == "" ? "Album" : widget.album}", overflow: TextOverflow.ellipsis),
               leading: Image.network(getMissingAlbumArtPath()),
             ),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Title',
               ),
+              maxLength: 50,
               onChanged: (value) {
                 widget.title = value;
                 updateState();
@@ -48,14 +50,17 @@ class _SongImportDialogState extends State<SongImportDialog> {
               decoration: InputDecoration(
                 labelText: 'Artist',
               ),
+              maxLength: 50,
               onChanged: (value) {
                 widget.artist = value;
                 updateState();
               },
-            ),TextField(
+            ),
+            TextField(
               decoration: InputDecoration(
                 labelText: 'Album',
               ),
+              maxLength: 50,
               onChanged: (value) {
                 widget.album = value;
                 updateState();

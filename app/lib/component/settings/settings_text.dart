@@ -28,7 +28,7 @@ class _SettingsTextState extends State<SettingsText> {
       padding: const EdgeInsets.symmetric(horizontal: 150),
       child: Row(
         children: [
-          Text(widget.description, style: TextStyle(fontSize: 16)),
+          Text(widget.description, style: TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis),
           Expanded(child: Container()),
           Expanded(
             child: TextField(

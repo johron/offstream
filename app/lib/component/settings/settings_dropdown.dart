@@ -29,14 +29,14 @@ class _SettingsDropdownState extends State<SettingsDropdown> {
       padding: const EdgeInsets.symmetric(horizontal: 150),
       child: Row(
         children: [
-          Text(widget.description, style: TextStyle(fontSize: 16)),
+          Text(widget.description, style: TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis),
           Expanded(child: Container()),
           DropdownButton<String>(
             value: widget.selectedValue,
             items: widget.values.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(value, overflow: TextOverflow.ellipsis),
               );
             }).toList(),
             onChanged: (String? newValue) {

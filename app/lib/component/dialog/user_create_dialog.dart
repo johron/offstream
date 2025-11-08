@@ -23,13 +23,15 @@ class _UserCreateDialogState extends State<UserCreateDialog> {
     return AlertDialog(
       title: Text('Create User'),
       content: SizedBox(
-        height: 150,
+        height: 200,
+        width: 300,
         child: Column(
           children: [
             TextField(
               decoration: InputDecoration(
                 labelText: 'Username',
               ),
+              maxLength: 50,
               onChanged: (value) {
                 widget.username = value;
                 updateState();
@@ -39,6 +41,7 @@ class _UserCreateDialogState extends State<UserCreateDialog> {
               decoration: InputDecoration(
                 labelText: 'PIN (optional)',
               ),
+              maxLength: 50,
               onChanged: (value) {
                 widget.pin = value.isEmpty ? null : value;
                 updateState();
