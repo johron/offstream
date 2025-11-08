@@ -86,16 +86,6 @@ class _PlaylistPageState extends State<PlaylistPage> {
               icon: Icon(Icons.push_pin_rounded, size: 30, color: Colors.white70),
               onPressed: () {},
             ),
-            IconButton(
-              icon: Icon(Icons.delete_forever_rounded, size: 30, color: Colors.white70),
-              onPressed: () {
-                UserController().deletePlaylist(widget.playlist.uuid).then((success) {
-                  if (success) {
-
-                  }
-                });
-              },
-            ),
             //Expanded(child: Container()),
             SizedBox(width: 30)
           ],

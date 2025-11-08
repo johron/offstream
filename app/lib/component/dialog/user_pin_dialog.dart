@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/component/snackbar.dart';
 
 import '../../controller/auth.dart';
 
@@ -46,10 +47,7 @@ class _UsePineDialogState extends State<UserPinDialog> {
                   Navigator.of(context).pop();
                   return;
                 }
-                final snackBar = SnackBar(
-                  content: Text(success ? "PIN correct, logged in" : "Incorrect PIN"),
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                OSnackBar(message: success ? "PIN correct, logged in" : "Incorrect PIN").show(context);
                 updateState();
                 Navigator.of(context).pop();
               },

@@ -3,6 +3,9 @@ import 'package:offstream/controller/storage.dart';
 import 'package:offstream/controller/user_controller.dart';
 import 'package:offstream/util/util.dart';
 
+import '../../controller/auth.dart';
+import '../snackbar.dart';
+
 class PlaylistCreateDialog extends StatefulWidget {
   String name = "Playlist";
   String description = "";
@@ -54,11 +57,12 @@ class _PlaylistCreateDialogState extends State<PlaylistCreateDialog> {
               onPressed: () {
                 print("Create playlist: ${widget.name}, description: ${widget.description}");
                 Navigator.of(context).pop();
+                if (AuthController().loggedInUser == null) {
+                  OSnackBar(message: "You must be logged in to create a playlist").show(context);
+                  return;
+                }
                 UserController().createPlaylist(widget.name, widget.description).then((success) {
-                  final snackBar = SnackBar(
-                    content: Text(success ? "Created playlist" : "Could not create playlist"),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  OSnackBar(message: success ? "Created playlist" : "Could not create playlist").show(context);
                 });
               },
               child: Text('OK'),

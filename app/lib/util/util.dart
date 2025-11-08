@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:offstream/type/configuration_data.dart';
 import 'package:offstream/type/playlist_data.dart';
 import 'package:offstream/type/song_data.dart';
@@ -81,4 +83,10 @@ String generatePlaylistUUID(String title) {
   var randomPart = math.Random().nextInt(100000);
   var uuid0 = '$title-$time-$randomPart';
   return base64Url.encode(uuid0.codeUnits);
+}
+
+Future<void> carefulShowDialog({required BuildContext context, required WidgetBuilder builder}) async {
+  if (context.mounted) {
+    showDialog(context: context, builder: builder);
+  }
 }

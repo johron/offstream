@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:offstream/component/dialog/playlist_create_dialog.dart';
+import 'package:offstream/component/snackbar.dart';
 import 'package:offstream/controller/user_controller.dart';
 
 import 'package:offstream/type/page.dart';
@@ -72,7 +73,7 @@ class _SidebarState extends State<Sidebar> {
             onTap: () => _changePage(OPage(Pages.library, null)),
             trailing: IconButton(icon: Icon(Icons.playlist_add), onPressed: () {
               // Show dialog to create new playlist
-              showDialog(context: context, builder: (context) {
+              carefulShowDialog(context: context, builder: (context) {
                 return PlaylistCreateDialog();
               });
             }),
@@ -101,7 +102,7 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
-  List<ListTile> getPlaylists() {
+  List<GestureDetector> getPlaylists() {
     if (auth.loggedInUser == null) {
       return [];
     }
@@ -110,18 +111,43 @@ class _SidebarState extends State<Sidebar> {
       return [];
     }
 
-    List<ListTile> playlists = [];
+    List<GestureDetector> playlists = [];
 
     var userData = auth.loggedInUser!.user;
 
     for (var playlist in userData.playlists) {
       playlists.add(
-        ListTile(
+        GestureDetector(
+          onSecondaryTapDown: (details) async {
+            final RenderBox overlay = Overlay.of(context)!.context.findRenderObject() as RenderBox;
+            final selected = await showMenu<String>(
+              context: context,
+              position: RelativeRect.fromRect(
+                details.globalPosition & const Size(1, 1),
+                Offset.zero & overlay.size,
+              ),
+              items: const [
+                PopupMenuItem(value: 'rename', child: Text('Rename')),
+                PopupMenuItem(value: 'delete', child: Text('Delete')),
+              ],
+            );
+            if (selected == 'rename') {
+              print('Rename playlist: ${playlist.title}');
+            } else if (selected == 'delete') {
+              UserController().deletePlaylist(playlist.uuid).then((success) {
+                if (!success) {
+                  OSnackBar(message: "Failed to delete playlist '${playlist.title}'").show(context);
+                }
+              });
+            }
+          },
+          child: ListTile(
             leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),
             title: Text(playlist.title),
             selected: selectedPage.page == Pages.playlist && selectedPage.playlist?.uuid == playlist.uuid,
-            onTap: () => _changePage(OPage(Pages.playlist, playlist)
-            )),
+            onTap: () => _changePage(OPage(Pages.playlist, playlist)),
+          ),
+        ),
       );
     }
     return playlists;

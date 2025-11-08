@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:offstream/component/snackbar.dart';
 
 import '../../controller/auth.dart';
 
@@ -21,7 +22,7 @@ class _UserCreateDialogState extends State<UserCreateDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Create User'),
-      content: Container(
+      content: SizedBox(
         height: 150,
         child: Column(
           children: [
@@ -50,11 +51,8 @@ class _UserCreateDialogState extends State<UserCreateDialog> {
                   return;
                 }
                 var success = AuthController().signup(widget.username, widget.pin);
-                final snackBar = SnackBar(
-                  content: Text(success ? "Signup successful" : "Signup failed"),
-                );
+                OSnackBar(message: success ? "Signup successful" : "Signup failed").show(context);
                 updateState();
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 Navigator.of(context).pop();
               },
               child: Text('OK'),

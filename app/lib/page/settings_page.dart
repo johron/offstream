@@ -6,10 +6,12 @@ import 'package:offstream/component/settings/settings_signup.dart';
 import 'package:offstream/component/settings/settings_toggle.dart';
 import 'package:offstream/controller/auth.dart';
 import 'package:offstream/controller/storage.dart';
+import 'package:offstream/util/util.dart';
 
 import '../component/dialog/user_pin_dialog.dart';
 import '../component/settings/settings_label.dart';
 import '../component/settings/settings_text.dart';
+import '../component/snackbar.dart';
 import '../type/stream_data.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -69,13 +71,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       if (!mounted) return;
 
                       if (AuthController().loggedInUser != null && AuthController().loggedInUser!.isAuthenticated == false && mounted) {
-                        await showDialog(context: context, builder: (context) => UserPinDialog());
+                        await carefulShowDialog(context: context, builder: (context) => UserPinDialog());
                       }
 
-                      final snackBar = SnackBar(
-                        content: Text(success ? "Login successful" : "Login failed"),
-                      );
-                      if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      if (!success) {
+                        OSnackBar(message: "Login failed").show(context);
+                      }
                       updateState();
                     },
                   );
@@ -88,10 +89,9 @@ class _SettingsPageState extends State<SettingsPage> {
             onPressed: () {
               var success = AuthController().logout();
               updateState();
-              final snackBar = SnackBar(
-                content: Text(success ? "Logged out" : "Logout failed"),
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              if (!success) {
+                OSnackBar(message: "Logout failed").show(context);
+              }
             },
           ),
 
@@ -101,7 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
           buttonText: 'Create',
           description: 'Create User',
           onPressed: () {
-            showDialog(context: context, builder: (context) {
+            carefulShowDialog(context: context, builder: (context) {
               return UserCreateDialog();
             });
             updateState();
