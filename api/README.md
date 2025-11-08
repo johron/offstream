@@ -1,5 +1,5 @@
 # Stream API
-- Server API for the Offstream client
+- Server API for the Peik client
 
 ## Todo
 - JSON merging:
