@@ -32,6 +32,7 @@ class _SettingsDropdownState extends State<SettingsDropdown> {
           Text(widget.description, style: TextStyle(fontSize: 16), overflow: TextOverflow.ellipsis),
           Expanded(child: Container()),
           DropdownButton<String>(
+            borderRadius: BorderRadius.circular(5),
             value: widget.selectedValue,
             items: widget.values.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(

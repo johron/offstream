@@ -115,6 +115,7 @@ class UserController {
       version: stream.version,
       token: stream.token,
       users: updatedUsers,
+      songs: stream.songs,
     );
 
     _userUpdateController.add(updatedUser);

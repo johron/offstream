@@ -30,6 +30,7 @@ class StorageController {
         version: version,
         token: auth.hashSha256(auth.generateToken()!),
         users: [],
+        songs: [],
       );
       await saveStream(initialStream);
     }
@@ -154,6 +155,7 @@ class StorageController {
         version: newStream.version,
         token: token,
         users: newStream.users,
+        songs: newStream.songs,
       );
 
       saveStream(newStream);

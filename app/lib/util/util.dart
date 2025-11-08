@@ -75,6 +75,7 @@ StreamData getSampleStreamData() {
     lastUpdate: DateTime.now().millisecondsSinceEpoch,
     version: "2025-1.0", token: "token123",
     users: [],
+    songs: [],
   );
 }
 
@@ -82,6 +83,13 @@ String generatePlaylistUUID(String title) {
   var time = DateTime.now().microsecondsSinceEpoch;
   var randomPart = math.Random().nextInt(100000);
   var uuid0 = '$title-$time-$randomPart';
+  return base64Url.encode(uuid0.codeUnits);
+}
+
+String generateSongUUID(String title, String artist, String album) {
+  var time = DateTime.now().microsecondsSinceEpoch;
+  var randomPart = math.Random().nextInt(100000);
+  var uuid0 = '$title-$artist-$album-$time-$randomPart';
   return base64Url.encode(uuid0.codeUnits);
 }
 

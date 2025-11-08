@@ -116,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
           print("Toggle pressed to: $value");
         }),
 
-        SettingsText(value: "http://127.0.0.1:8080", description: "Stream Remote URL", onChanged: (text) {
+        SettingsText(value: "Path", description: "Stream Remote URL", onChanged: (text) {
           print("Text changed to: $text");
         }),
 

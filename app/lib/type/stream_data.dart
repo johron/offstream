@@ -1,3 +1,4 @@
+import 'package:offstream/type/song_data.dart';
 import 'package:offstream/type/user_data.dart';
 
 class StreamData {
@@ -5,12 +6,14 @@ class StreamData {
   final String version;
   final String token;
   final List<UserData> users;
+  final List<SongData> songs;
 
   const StreamData({
     required this.lastUpdate,
     required this.version,
     required this.token,
     required this.users,
+    required this.songs,
   });
 
   Map<String, dynamic> toJson() {
@@ -19,6 +22,7 @@ class StreamData {
       'version': version,
       'token': token,
       'users': users.map((user) => user.toJson()).toList(),
+      'songs': songs.map((song) => song.toJson()).toList(),
     };
   }
 
@@ -30,15 +34,9 @@ class StreamData {
       users: (json['users'] as List<dynamic>)
           .map((userJson) => UserData.fromJson(userJson))
           .toList(),
-    );
-  }
-
-  static StreamData empty() {
-    return StreamData(
-      lastUpdate: 0,
-      version: "0.0.0",
-      token: "",
-      users: [],
+      songs: (json['songs'] as List<dynamic>)
+          .map((songJson) => SongData.fromJson(songJson))
+          .toList(),
     );
   }
 }
