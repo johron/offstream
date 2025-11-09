@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:just_audio/just_audio.dart';
 import 'package:peik/type/playlist_data.dart';
 import 'package:peik/type/song_data.dart';
-
-import 'package:just_audio/just_audio.dart';
 
 enum PlaybackState {
   playing,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:peik/component/dialog/user_create_dialog.dart';
 import 'package:peik/component/settings/settings_button.dart';
 import 'package:peik/component/settings/settings_dropdown.dart';
-import 'package:peik/component/settings/settings_signup.dart';
 import 'package:peik/component/settings/settings_toggle.dart';
 import 'package:peik/controller/auth_controller.dart';
 import 'package:peik/controller/storage_controller.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:peik/component/dialog/user_pin_dialog.dart';
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:peik/controller/auth_controller.dart';
 import 'package:peik/controller/playback_controller.dart';
 import 'package:peik/controller/storage_controller.dart';
@@ -8,14 +8,8 @@ import 'package:peik/page/library_page.dart';
 import 'package:peik/page/playlist_page.dart';
 import 'package:peik/page/settings_page.dart';
 import 'package:peik/type/page.dart';
-import 'package:peik/type/stream_data.dart';
-import 'package:peik/util/util.dart';
-
 import 'package:peik/view/multimedia.dart';
-import 'package:peik/page/old_playlist_page.dart';
 import 'package:peik/view/sidebar.dart';
-
-import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 
 import 'component/pin.dart';
 

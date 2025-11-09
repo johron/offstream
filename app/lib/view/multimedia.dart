@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:peik/controller/playback_controller.dart';
 import 'package:peik/component/rounded.dart';
+import 'package:peik/controller/playback_controller.dart';
 import 'package:peik/util/color.dart';
 import 'package:peik/util/time.dart';
 import 'package:peik/util/util.dart';

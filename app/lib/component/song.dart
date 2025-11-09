@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:peik/component/snackbar.dart';
 import 'package:peik/controller/storage_controller.dart';
-import 'package:peik/type/playlist_data.dart';
 import 'package:peik/type/song_data.dart';
-
-import '../controller/user_controller.dart';
 
 class Song extends StatelessWidget {
   final SongData song;

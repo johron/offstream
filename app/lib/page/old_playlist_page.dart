@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:peik/controller/playback_controller.dart';
 import 'package:peik/component/index_and_play.dart';
+import 'package:peik/controller/playback_controller.dart';
 import 'package:peik/controller/storage_controller.dart';
-import 'package:peik/controller/user_controller.dart';
 import 'package:peik/type/playlist_data.dart';
 import 'package:peik/util/color.dart';
 

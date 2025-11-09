@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'dart:math' as math;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:peik/controller/storage_controller.dart';
-import 'package:peik/type/configuration_data.dart';
 import 'package:peik/type/playlist_data.dart';
 import 'package:peik/type/song_data.dart';
-import 'package:peik/type/user_data.dart';
 
 import '../type/stream_data.dart';
 

@@ -1,7 +1,5 @@
 import 'package:peik/type/song_data.dart';
 
-import '../util/util.dart';
-
 class PlaylistData {
   final String uuid;
   final String title;

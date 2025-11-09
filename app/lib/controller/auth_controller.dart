@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:crypto/crypto.dart';
 
+import 'package:crypto/crypto.dart';
 import 'package:peik/controller/storage_controller.dart';
 import 'package:peik/controller/user_controller.dart';
 import 'package:peik/type/configuration_data.dart';
 import 'package:peik/type/local_store.dart';
 import 'package:peik/type/user_data.dart';
-import 'package:peik/util/util.dart';
 
 class AuthUser {
   final UserData user;

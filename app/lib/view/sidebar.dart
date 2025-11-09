@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:peik/component/dialog/playlist_create_dialog.dart';
 import 'package:peik/component/playlist.dart';
-import 'package:peik/component/snackbar.dart';
 import 'package:peik/controller/user_controller.dart';
-
 import 'package:peik/type/page.dart';
 import 'package:peik/util/util.dart';
 
 import '../component/rounded.dart';
 import '../controller/auth_controller.dart';
-import '../type/playlist_data.dart';
 
 class Sidebar extends StatefulWidget {
   final ValueChanged<OPage>? onPageSelected;
