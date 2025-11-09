@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:peik/controller/playback_controller.dart';
 import 'package:peik/component/index_and_play.dart';
+import 'package:peik/controller/storage_controller.dart';
 import 'package:peik/controller/user_controller.dart';
 import 'package:peik/type/playlist_data.dart';
 import 'package:peik/util/color.dart';
 
 import '../component/rounded.dart';
+import '../component/song.dart';
 import '../type/song_data.dart';
 import '../util/time.dart';
 import '../util/util.dart';
 
 class PlaylistPage extends StatefulWidget {
-  final PlaylistData playlist;
+  PlaylistData playlist;
+  final Stream<PlaylistData> onPlaylistUpdated;
 
   PlaylistPage({
     required this.playlist,
+    required this.onPlaylistUpdated,
     super.key
   });
 
@@ -27,7 +31,17 @@ class _PlaylistPageState extends State<PlaylistPage> {
 
   @override
   void initState() {
+    widget.onPlaylistUpdated.listen((playlist) {
+      widget.playlist = playlist;
+      updateState();
+    });
+
     super.initState();
+  }
+
+  void updateState() {
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
@@ -59,8 +73,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
                         softWrap: true,
                       ),
                       Text(
-                          '${widget.playlist.songs.length} ${widget.playlist.songs.length == 1 ? 'song' : 'songs'}',
-                          style: TextStyle(fontSize: 16, color: Colors.white70)),
+                        '${widget.playlist.songs.length} ${widget.playlist.songs.length == 1 ? 'song' : 'songs'}',
+                        style: TextStyle(fontSize: 16, color: Colors.white70)
+                      ),
                       // calculate total duration
                     ],
                   ),
@@ -126,7 +141,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
     for (SongData data in widget.playlist.songs) {
       rows.add(DataRow(cells: [
         DataCell(
-          Row(
+          Song(song: data, widget: Row(
             children: [
               Container(
                 width: 40,
@@ -161,7 +176,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
               )
             ],
           )
-        ),
+        )),
         DataCell(Text(data.album, style: TextStyle(color: Colors.white70), overflow: TextOverflow.ellipsis)),
         DataCell(Text(formatDateTime(data.added), style: TextStyle(color: Colors.white70), overflow: TextOverflow.ellipsis)),
         DataCell(Text(formatDuration(data.duration), style: TextStyle(color: Colors.white70), overflow: TextOverflow.ellipsis)),

@@ -23,6 +23,7 @@ class _LibraryPageState extends State<LibraryPage> {
   final StorageController storageController = StorageController();
 
   void updateState() {
+    if (!mounted) return;
     setState(() {});
   }
 
@@ -33,10 +34,6 @@ class _LibraryPageState extends State<LibraryPage> {
     });
     
     userController.onUserUpdated.listen((event) {
-      updateState();
-    });
-
-    storageController.onStreamUpdated.listen((_) {
       updateState();
     });
 

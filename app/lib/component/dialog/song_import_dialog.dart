@@ -128,7 +128,7 @@ class _SongImportDialogState extends State<SongImportDialog> {
             ),
             SizedBox(height: 15),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 if (widget.title == "" || widget.artist == "" || widget.album == "" || widget.path == "") {
                   OSnackBar(message: "Please fill in all fields").show(context);
                   return;
@@ -145,7 +145,7 @@ class _SongImportDialogState extends State<SongImportDialog> {
                   added: DateTime.now(),
                 );
 
-                StorageController().addSong(songData);
+                await StorageController().addSong(songData);
               },
               child: Text('OK'),
             ),

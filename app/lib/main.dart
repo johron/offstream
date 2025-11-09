@@ -113,6 +113,7 @@ class _PeikAppState extends State<PeikApp> {
 
         return PlaylistPage(
           playlist: _selectedPage.playlist!,
+          onPlaylistUpdated: userController.onUserUpdatedPlaylist,
         );
     }
   }

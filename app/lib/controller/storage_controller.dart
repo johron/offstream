@@ -21,9 +21,6 @@ class StorageController {
 
   final AuthController auth = AuthController();
 
-  final _streamUpdateController = StreamController<void>.broadcast();
-  Stream<void> get onStreamUpdated => _streamUpdateController.stream;
-
   Future<void> init() async {
     var streamData = await loadStream();
     if (streamData == null) {
@@ -82,10 +79,9 @@ class StorageController {
   Future<File> saveStream(StreamData data) async {
     final file = await _streamFile;
     final String stream = jsonEncode(data);
+    final res = file.writeAsString(stream);
 
-    _streamUpdateController.add(null);
-
-    return file.writeAsString(stream);
+    return res;
   }
 
   Future<StreamData?> loadStream() async {
@@ -152,9 +148,26 @@ class StorageController {
     var newStream = stream;
     newStream.songs.add(song);
 
-    saveStream(newStream);
+    await saveStream(newStream);
 
     print("Song ${song.title} added successfully.");
+
+    return true;
+  }
+
+  Future<bool> removeSong(String songUUID) async {
+    var stream = await loadStream();
+    if (stream == null) {
+      print("No stream data available to remove song.");
+      return false;
+    }
+
+    var newStream = stream;
+    newStream.songs.removeWhere((song) => song.uuid == songUUID);
+
+    await saveStream(newStream);
+
+    print("Song with UUID $songUUID removed successfully.");
 
     return true;
   }
