@@ -14,11 +14,9 @@ import '../util/util.dart';
 
 class PlaylistPage extends StatefulWidget {
   PlaylistData playlist;
-  final Stream<PlaylistData> onPlaylistUpdated;
 
   PlaylistPage({
     required this.playlist,
-    required this.onPlaylistUpdated,
     super.key
   });
 
@@ -27,15 +25,26 @@ class PlaylistPage extends StatefulWidget {
 }
 
 class _PlaylistPageState extends State<PlaylistPage> {
-  final PlaybackController _controller = PlaybackController();
-
+  final PlaybackController playbackController = PlaybackController();
+  final StorageController storageController = StorageController();
+  
   @override
   void initState() {
-    widget.onPlaylistUpdated.listen((playlist) {
-      widget.playlist = playlist;
+    storageController.onSongRemoved.listen((uuid) {
+      if (widget.playlist.songs.any((song) => song.uuid == uuid)) {
+        widget.playlist.songs.removeWhere((song) => song.uuid == uuid);
+        updateState();
+      }
       updateState();
     });
 
+    if (widget.playlist.uuid == "0") {
+      storageController.onSongAdded.listen((song) {
+        widget.playlist.songs.add(song);
+        updateState();
+      });
+    }
+    
     super.initState();
   }
 
@@ -149,7 +158,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                 child: IndexAndPlay(
                   index: widget.playlist.songs.indexOf(data),
                   onPlay: () {
-                    _controller.song(data);
+                    playbackController.song(data);
                   }
                 )
               ),

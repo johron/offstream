@@ -21,6 +21,12 @@ class StorageController {
 
   final AuthController auth = AuthController();
 
+  final _songAddedController = StreamController<SongData>.broadcast();
+  final _songRemovedController = StreamController<String>.broadcast();
+
+  Stream<SongData> get onSongAdded => _songAddedController.stream;
+  Stream<String> get onSongRemoved => _songRemovedController.stream;
+
   Future<void> init() async {
     var streamData = await loadStream();
     if (streamData == null) {
@@ -149,6 +155,7 @@ class StorageController {
     newStream.songs.add(song);
 
     await saveStream(newStream);
+    _songAddedController.add(song);
 
     print("Song ${song.title} added successfully.");
 
@@ -166,6 +173,7 @@ class StorageController {
     newStream.songs.removeWhere((song) => song.uuid == songUUID);
 
     await saveStream(newStream);
+    _songRemovedController.add(songUUID);
 
     print("Song with UUID $songUUID removed successfully.");
 

@@ -28,8 +28,6 @@ class UserController {
   Stream<void> get onUserDeletedPlaylist => _userDeletePlaylistController.stream;
   Stream<OPage> get onUserSelectedPage => userSelectedPageController.stream;
 
-
-
   // getter for AuthController find loggedInUser
   Future<UserData> get user async {
     var authUser = auth.loggedInUser;
@@ -97,7 +95,32 @@ class UserController {
     return true;
   }
 
-  void updateUser(UserData updatedUser) async {
+  Future<void> updatePlaylist(PlaylistData updatedPlaylist) async {
+    var stream = await storage.loadStream();
+    if (stream == null) {
+      return;
+    }
+
+    var user = await this.user;
+    var updatedPlaylists = user.playlists.map((p) {
+      if (p.uuid == updatedPlaylist.uuid) {
+        return updatedPlaylist;
+      }
+      return p;
+    }).toList();
+
+    var updatedUser = UserData(
+      username: user.username,
+      pin: user.pin,
+      playlists: updatedPlaylists,
+      configuration: user.configuration,
+    );
+
+    await updateUser(updatedUser);
+    return;
+  }
+
+  Future<void> updateUser(UserData updatedUser) async {
     var stream = await storage.loadStream();
     if (stream == null) {
       return;
