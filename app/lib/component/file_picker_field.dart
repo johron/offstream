@@ -44,7 +44,10 @@ class _FilePickerFieldState extends State<FilePickerField> {
             IconButton(
               icon: Icon(Icons.folder_open_rounded),
               onPressed: () async {
-                FilePickerResult? result = await FilePicker.platform.pickFiles();
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  dialogTitle: "Select Audio File",
+                  type: FileType.audio,
+                );
 
                 if (result == null) {
                   print("No file selected");

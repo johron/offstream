@@ -51,7 +51,7 @@ class _SongImportDialogState extends State<SongImportDialog> {
                     borderRadius: BorderRadius.circular(5),
                     isExpanded: false,
                     value: widget.importMethod,
-                    items: <String>['From File', 'From URL'].map<DropdownMenuItem<String>>((String value) {
+                    items: <String>['From File', 'From URL', 'From YouTube'].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(value, overflow: TextOverflow.ellipsis),
@@ -80,7 +80,7 @@ class _SongImportDialogState extends State<SongImportDialog> {
               : TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Audio URL',
+                    labelText: widget.importMethod == "From URL" ? 'Enter Audio URL' : 'Enter YouTube URL',
                   ),
                   onChanged: (value) {
                     widget.path = value;
@@ -145,8 +145,7 @@ class _SongImportDialogState extends State<SongImportDialog> {
                   added: DateTime.now(),
                 );
 
-                // pretty print
-                print("Song Data: ${songData.toJson()}");
+                StorageController().addSong(songData);
               },
               child: Text('OK'),
             ),

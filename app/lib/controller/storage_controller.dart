@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:peik/controller/auth_controller.dart';
 import 'package:peik/type/local_store.dart';
+import 'package:peik/type/song_data.dart';
 import 'package:peik/util/constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:peik/type/stream_data.dart';
@@ -19,6 +20,9 @@ class StorageController {
   factory StorageController() => _instance;
 
   final AuthController auth = AuthController();
+
+  final _streamUpdateController = StreamController<void>.broadcast();
+  Stream<void> get onStreamUpdated => _streamUpdateController.stream;
 
   Future<void> init() async {
     var streamData = await loadStream();
@@ -78,6 +82,9 @@ class StorageController {
   Future<File> saveStream(StreamData data) async {
     final file = await _streamFile;
     final String stream = jsonEncode(data);
+
+    _streamUpdateController.add(null);
+
     return file.writeAsString(stream);
   }
 
@@ -131,6 +138,23 @@ class StorageController {
     saveStream(newStream);
 
     print("User ${user.username} added successfully.");
+
+    return true;
+  }
+
+  Future<bool> addSong(SongData song) async {
+    var stream = await loadStream();
+    if (stream == null) {
+      print("No stream data available to add song.");
+      return false;
+    }
+
+    var newStream = stream;
+    newStream.songs.add(song);
+
+    saveStream(newStream);
+
+    print("Song ${song.title} added successfully.");
 
     return true;
   }

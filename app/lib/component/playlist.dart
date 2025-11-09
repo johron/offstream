@@ -7,10 +7,12 @@ import '../controller/user_controller.dart';
 class Playlist extends StatelessWidget {
   final PlaylistData playlist;
   final Widget widget;
+  final bool disableContextMenu;
 
   const Playlist({
     required this.playlist,
     required this.widget,
+    this.disableContextMenu = false,
     super.key,
   });
 
@@ -18,6 +20,7 @@ class Playlist extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onSecondaryTapDown: (details) async {
+        if (disableContextMenu) return;
         final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
         final selected = await showMenu<String>(
           context: context,

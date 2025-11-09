@@ -6,6 +6,7 @@ import 'package:peik/util/util.dart';
 import '../component/dialog/song_import_dialog.dart';
 import '../component/rounded.dart';
 import '../controller/auth_controller.dart';
+import '../controller/storage_controller.dart';
 import '../type/page.dart';
 import '../util/color.dart';
 
@@ -19,6 +20,7 @@ class LibraryPage extends StatefulWidget {
 class _LibraryPageState extends State<LibraryPage> {
   final AuthController authController = AuthController();
   final UserController userController = UserController();
+  final StorageController storageController = StorageController();
 
   void updateState() {
     setState(() {});
@@ -31,6 +33,10 @@ class _LibraryPageState extends State<LibraryPage> {
     });
     
     userController.onUserUpdated.listen((event) {
+      updateState();
+    });
+
+    storageController.onStreamUpdated.listen((_) {
       updateState();
     });
 
@@ -68,7 +74,9 @@ class _LibraryPageState extends State<LibraryPage> {
   Future<List<Widget>> _buildPlaylistCards() async {
     List<Widget> cards = [];
 
-    var playlists = await userController.user;
+    var user = await userController.user;
+    var playlists = user.playlists;
+    playlists.add(await getAllSongsPlaylist());
 
     cards.add(
       Card(
@@ -94,9 +102,10 @@ class _LibraryPageState extends State<LibraryPage> {
       )
     );
 
-    for (var playlist in playlists.playlists) { // TODO: Also add a generated playlist with all downloaded songs and add it to the list
+    for (var playlist in playlists) {
       cards.add(
         Playlist(
+          disableContextMenu: playlist.title == "All Songs",
           playlist: playlist,
           widget: Card(
             color: Colors.transparent,

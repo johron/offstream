@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:peik/controller/storage_controller.dart';
 import 'package:peik/type/configuration_data.dart';
 import 'package:peik/type/playlist_data.dart';
 import 'package:peik/type/song_data.dart';
@@ -97,4 +98,17 @@ Future<void> carefulShowDialog({required BuildContext context, required WidgetBu
   if (context.mounted) {
     showDialog(context: context, builder: builder);
   }
+}
+
+Future<PlaylistData> getAllSongsPlaylist() async {
+  var stream = await StorageController().loadStream();
+  var songs = stream?.songs ?? [];
+
+  return PlaylistData(
+    uuid: "0",
+    title: 'All Songs',
+    songs: songs,
+    created: DateTime.now(),
+    lastUpdate: DateTime.now(),
+  );
 }
