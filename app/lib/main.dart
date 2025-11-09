@@ -97,7 +97,7 @@ class _PeikAppState extends State<PeikApp> {
       case Pages.settings:
         return SettingsPage();
       case Pages.playlist:
-        if (_selectedPage.playlist == null) {
+        if (_selectedPage.uuid == null) {
           return Text('No playlist selected');
         }
 
@@ -107,7 +107,7 @@ class _PeikAppState extends State<PeikApp> {
         }
 
         return PlaylistPage(
-          uuid: _selectedPage.playlist!.uuid,
+          uuid: _selectedPage.uuid!,
         );
     }
   }

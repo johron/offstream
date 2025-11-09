@@ -22,6 +22,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   void updateState() {
+    if (!mounted) return;
     setState(() {});
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:peik/component/snackbar.dart';
 import 'package:peik/type/playlist_data.dart';
 
-import '../controller/user_controller.dart';
+import '../../controller/user_controller.dart';
 
 class Playlist extends StatelessWidget {
   final PlaylistData playlist;

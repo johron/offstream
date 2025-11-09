@@ -43,6 +43,7 @@ class _PlaylistCreateDialogState extends State<PlaylistCreateDialog> {
                 widget.name = value;
                 updateState();
               },
+              onSubmitted: (_) => callback,
             ),
             TextField(
               decoration: InputDecoration(
@@ -53,27 +54,30 @@ class _PlaylistCreateDialogState extends State<PlaylistCreateDialog> {
                 widget.description = value;
                 updateState();
               },
+              onSubmitted: (_) => callback,
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                print("Create playlist: ${widget.name}, description: ${widget.description}");
-                Navigator.of(context).pop();
-                if (AuthController().loggedInUser == null) {
-                  OSnackBar(message: "You must be logged in to create a playlist").show(context);
-                  return;
-                }
-                UserController().createPlaylist(widget.name, widget.description).then((success) {
-                  if (!success) {
-                    OSnackBar(message: "Could not create playlist").show(context);
-                  }
-                });
-              },
+              onPressed: callback,
               child: Text('OK'),
             ),
           ],
         ),
       )
     );
+  }
+
+  void callback() {
+    print("Create playlist: ${widget.name}, description: ${widget.description}");
+    Navigator.of(context).pop();
+    if (AuthController().loggedInUser == null) {
+      OSnackBar(message: "You must be logged in to create a playlist").show(context);
+      return;
+    }
+    UserController().createPlaylist(widget.name, widget.description).then((success) {
+      if (!success) {
+        OSnackBar(message: "Could not create playlist").show(context);
+      }
+    });
   }
 }

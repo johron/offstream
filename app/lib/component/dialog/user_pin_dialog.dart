@@ -34,29 +34,32 @@ class _UsePineDialogState extends State<UserPinDialog> {
                 widget.pin = value;
                 updateState();
               },
+              onSubmitted: (_) => callback(),
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                if (widget.pin.isEmpty) {
-                  return;
-                }
-                var success = AuthController().verifyPin(widget.pin);
-                if (!success) {
-                  AuthController().logout();
-                  widget.pin = "";
-                  Navigator.of(context).pop();
-                  return;
-                }
-                OSnackBar(message: success ? "PIN correct, logged in" : "Incorrect PIN").show(context);
-                updateState();
-                Navigator.of(context).pop();
-              },
+              onPressed: callback,
               child: Text('OK'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void callback() {
+    if (widget.pin.isEmpty) {
+      return;
+    }
+    var success = AuthController().verifyPin(widget.pin);
+    if (!success) {
+      AuthController().logout();
+      widget.pin = "";
+      Navigator.of(context).pop();
+      return;
+    }
+    OSnackBar(message: success ? "PIN correct, logged in" : "Incorrect PIN").show(context);
+    updateState();
+    Navigator.of(context).pop();
   }
 }

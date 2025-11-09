@@ -96,16 +96,3 @@ Future<void> carefulShowDialog({required BuildContext context, required WidgetBu
     showDialog(context: context, builder: builder);
   }
 }
-
-Future<PlaylistData> getAllSongsPlaylist() async {
-  var stream = await StorageController().loadStream();
-  var songs = stream?.songs ?? [];
-
-  return PlaylistData(
-    uuid: "0",
-    title: 'All Songs',
-    songs: songs,
-    created: DateTime.now(),
-    lastUpdate: DateTime.now(),
-  );
-}

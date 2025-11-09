@@ -10,7 +10,7 @@ enum Pages {
 
 class OPage {
   final Pages page;
-  final PlaylistData? playlist; // Git repository path, not applicable for other pages
+  final String? uuid; // Git repository path, not applicable for other pages
 
-  const OPage(this.page, this.playlist);
+  const OPage(this.page, this.uuid);
 }

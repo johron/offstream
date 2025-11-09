@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:peik/component/dialog/playlist_create_dialog.dart';
-import 'package:peik/component/playlist.dart';
+import 'package:peik/component/gesture/playlist.dart';
 import 'package:peik/controller/user_controller.dart';
 import 'package:peik/type/page.dart';
 import 'package:peik/util/util.dart';
@@ -52,7 +52,7 @@ class _SidebarState extends State<Sidebar> {
   }
 
   void _changePage(OPage page) {
-    if (selectedPage.playlist?.uuid == page.playlist?.uuid && selectedPage.page == page.page) {
+    if (selectedPage.uuid == page.uuid && selectedPage.page == page.page) {
       return;
     }
 
@@ -123,8 +123,8 @@ class _SidebarState extends State<Sidebar> {
         Playlist(playlist: playlist, widget: ListTile(
           leading: Rounded(child: Image.network(getMissingAlbumArtPath(), scale: 5)),
           title: Text(playlist.title, overflow: TextOverflow.ellipsis),
-          selected: selectedPage.page == Pages.playlist && selectedPage.playlist?.uuid == playlist.uuid,
-          onTap: () => _changePage(OPage(Pages.playlist, playlist)),
+          selected: selectedPage.page == Pages.playlist && selectedPage.uuid == playlist.uuid,
+          onTap: () => _changePage(OPage(Pages.playlist, playlist.uuid)),
         ))
       );
     }
