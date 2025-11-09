@@ -53,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
               future: StorageController().loadStream(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading users...");
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text("Error loading users");
                 } else {

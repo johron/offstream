@@ -40,6 +40,9 @@ class _LibraryPageState extends State<LibraryPage> {
     super.initState();
   }
 
+  // TODO: Remake this: on the top before the grid, three buttons "Import Song(s)", "Create Playlist", "All Songs",
+  // TODO: rectangular buttons with icons, kind of like the current import song button but wider and shorter on the top
+
   @override
   Widget build(BuildContext context) {
     return Padding(
