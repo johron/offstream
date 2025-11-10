@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:peik/component/index_and_play.dart';
 import 'package:peik/component/rounded.dart';
 import 'package:peik/component/snackbar.dart';
+import 'package:peik/controller/playback_controller.dart';
 import 'package:peik/controller/user_controller.dart';
 import 'package:peik/util/util.dart';
 
@@ -181,6 +182,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                         index: playlist.songs.indexOf(song),
                         onPlay: () {
                           print("Play song: ${song.title}");
+                          PlaybackController().song(song);
                         }
                     )
                 ),

@@ -28,6 +28,8 @@ class StorageController {
   Stream<SongData> get onSongAdded => _songAddedController.stream;
   Stream<String> get onSongRemoved => _songRemovedController.stream;
 
+  late String localPath;
+
   Future<void> init() async {
     var streamData = await loadStream();
     if (streamData == null) {
@@ -42,6 +44,8 @@ class StorageController {
       );
       await saveStream(initialStream);
     }
+
+    localPath = await _localPath;
   }
 
   Future<String> get _localPath async {
@@ -134,6 +138,14 @@ class StorageController {
     if (!await dir.exists()) await dir.create(recursive: true);
     final file = File('$path/songs/$songUUID.mp3');
     return file.writeAsBytes(bytes);
+  }
+
+  String getSongFilePath(String songUUID) {
+    var path = _localPath.then((value) {
+        return '$value/songs/$songUUID.mp3}';
+    });
+
+    return path.toString();
   }
 
   Future<bool> addUser(UserData user) async {

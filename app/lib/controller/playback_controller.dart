@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:just_audio/just_audio.dart';
+import 'package:peik/controller/storage_controller.dart';
 import 'package:peik/type/playlist_data.dart';
 import 'package:peik/type/song_data.dart';
 
@@ -102,8 +103,7 @@ class PlaybackController {
   }
 
   void song(SongData song) {
-    //_player.setFilePath("/home/johron/Downloads/02 - Dio - Holy Diver.mp3");
-    _player.setUrl("https://ia804608.us.archive.org/25/items/dio_holy_diver/02%20-%20Dio%20-%20Holy%20Diver.mp3");
+    _player.setFilePath(StorageController().getSongFilePath(song.uuid));
 
     _currentSong = song;
     _currentSongController.add(_currentSong);

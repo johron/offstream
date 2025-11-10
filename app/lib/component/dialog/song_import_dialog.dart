@@ -139,7 +139,7 @@ class _SongImportDialogState extends State<SongImportDialog> {
                   title: widget.title,
                   artist: widget.artist,
                   album: widget.album,
-                  duration: Duration.zero, // TODO: Mp3 ripper to get duration
+                  duration: Duration(seconds: 90), // TODO: ffmpeg to get duration
                   added: DateTime.now(),
                 );
 
