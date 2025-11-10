@@ -143,7 +143,7 @@ class _SongImportDialogState extends State<SongImportDialog> {
                   added: DateTime.now(),
                 );
 
-                await StorageController().addSong(songData);
+                await StorageController().addSong(songData, widget.path, widget.importMethod);
               },
               child: Text('OK'),
             ),

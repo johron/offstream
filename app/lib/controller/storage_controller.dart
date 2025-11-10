@@ -57,14 +57,14 @@ class StorageController {
 
     if (Platform.isWindows) {
       final appData = Platform.environment['APPDATA'] ?? Platform.environment['USERPROFILE'] ?? '.';
-      final dir = Directory('$appData${Platform.pathSeparator}Peik');
+      final dir = Directory('$appData${Platform.pathSeparator}peik');
       if (!await dir.exists()) await dir.create(recursive: true);
       return dir.path;
     }
 
     if (Platform.isMacOS) {
       final home = Platform.environment['HOME'] ?? '.';
-      final dir = Directory('$home/Library/Application Support/Peik');
+      final dir = Directory('$home/Library/Application Support/peik');
       if (!await dir.exists()) await dir.create(recursive: true);
       return dir.path;
     }
@@ -126,6 +126,14 @@ class StorageController {
     }
   }
 
+  Future<File> saveSongFile(String songUUID, List<int> bytes) async {
+    final path = await _localPath;
+    final dir = Directory('$path/songs');
+    if (!await dir.exists()) await dir.create(recursive: true);
+    final file = File('$path/songs/$songUUID.mp3');
+    return file.writeAsBytes(bytes);
+  }
+
   Future<bool> addUser(UserData user) async {
     var stream = await loadStream();
     if (stream == null) {
@@ -143,11 +151,25 @@ class StorageController {
     return true;
   }
 
-  Future<bool> addSong(SongData song) async {
+  Future<bool> addSong(SongData song, String path, String method) async {
     var stream = await loadStream();
     if (stream == null) {
       print("No stream data available to add song.");
       return false;
+    }
+
+    switch (method) {
+      case "From File": {
+        final file = File(path);
+        if (!await file.exists()) {
+          print("File at path $path does not exist.");
+          return false;
+        }
+        final bytes = await file.readAsBytes();
+        await saveSongFile(song.uuid, bytes);
+      }
+      case "From URL": {}
+      case "From YouTube": {}
     }
 
     var newStream = stream;
