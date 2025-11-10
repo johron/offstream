@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
+
 import 'package:path_provider/path_provider.dart';
 import 'package:peik/controller/auth_controller.dart';
 import 'package:peik/type/local_store.dart';
@@ -168,8 +170,21 @@ class StorageController {
         final bytes = await file.readAsBytes();
         await saveSongFile(song.uuid, bytes);
       }
-      case "From URL": {}
-      case "From YouTube": {}
+      case "From URL": {
+        // get file with http:
+        final uri = Uri.parse(path);
+        final response = await http.get(uri);
+        if (response.statusCode != 200) {
+          print("Failed to download file from URL $path. Status code: ${response
+              .statusCode}");
+          return false;
+        }
+        await saveSongFile(song.uuid, response.bodyBytes);
+      }
+      case "From YouTube": {
+        print("YouTube import method not implemented yet.");
+        return false;
+      }
     }
 
     var newStream = stream;
