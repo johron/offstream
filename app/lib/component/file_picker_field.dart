@@ -46,7 +46,8 @@ class _FilePickerFieldState extends State<FilePickerField> {
               onPressed: () async {
                 FilePickerResult? result = await FilePicker.platform.pickFiles(
                   dialogTitle: "Select Audio File",
-                  type: FileType.audio,
+                  type: FileType.custom,
+                  allowedExtensions: ['mp3', 'wav', 'flac']
                 );
 
                 if (result == null) {

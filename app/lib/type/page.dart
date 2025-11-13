@@ -1,5 +1,4 @@
 // Page Enum
-import 'package:peik/type/playlist_data.dart';
 
 enum Pages {
   library,

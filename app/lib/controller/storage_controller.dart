@@ -136,16 +136,13 @@ class StorageController {
     final path = await _localPath;
     final dir = Directory('$path/songs');
     if (!await dir.exists()) await dir.create(recursive: true);
-    final file = File('$path/songs/$songUUID.mp3');
+    final file = File('$path/songs/$songUUID.flac');
     return file.writeAsBytes(bytes);
   }
 
-  String getSongFilePath(String songUUID) {
-    var path = _localPath.then((value) {
-        return '$value/songs/$songUUID.mp3}';
-    });
-
-    return path.toString();
+  Future<String> getSongFilePath(String songUUID) async {
+    var path = "${await _localPath}/songs/$songUUID.flac";
+    return path;
   }
 
   Future<bool> addUser(UserData user) async {

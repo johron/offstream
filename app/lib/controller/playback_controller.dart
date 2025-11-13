@@ -102,20 +102,30 @@ class PlaybackController {
     print("Seeking to position: $_position");
   }
 
+  int duration() {
+    return _player.duration?.inSeconds ?? 0;
+  }
+
+  Duration get durationDuration {
+    return _player.duration ?? Duration.zero;
+  }
+
   void song(SongData song) {
-    _player.setFilePath(StorageController().getSongFilePath(song.uuid));
+    StorageController().getSongFilePath(song.uuid).then((filePath) {
+      _player.setFilePath(filePath);
 
-    _currentSong = song;
-    _currentSongController.add(_currentSong);
+      _currentSong = song;
+      _currentSongController.add(_currentSong);
 
-    _state = PlaybackState.playing;
-    _playbackStateController.add(_state);
+      _state = PlaybackState.playing;
+      _playbackStateController.add(_state);
 
-    seek(Duration.zero);
+      seek(Duration.zero);
 
-    _player.play();
+      _player.play();
 
-    print("Changing current song to: ${song.title}");
+      print("Changing current song to: ${song.title}");
+    });
   }
 
   void volume(double vol) {

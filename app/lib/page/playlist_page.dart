@@ -6,8 +6,6 @@ import 'package:peik/controller/playback_controller.dart';
 import 'package:peik/controller/user_controller.dart';
 import 'package:peik/util/util.dart';
 
-import 'package:material_table_view/material_table_view.dart';
-
 import '../controller/storage_controller.dart';
 import '../type/playlist_data.dart';
 import '../type/song_data.dart';
