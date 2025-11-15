@@ -91,6 +91,8 @@ class PlaybackController {
 
   void previous() {
     print("Skipping to previous track");
+    // if no previous track in queue, seek to start, TODO
+    _player.seek(Duration.zero);
   }
 
   void seek(Duration position) {
