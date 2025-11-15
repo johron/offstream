@@ -27,6 +27,7 @@ class PlaylistPage extends StatefulWidget {
 class _PlaylistPageState extends State<PlaylistPage> {
   final userController = UserController();
   final storageController = StorageController();
+  final playbackController = PlaybackController();
 
   void updateState() {
     if (!mounted) return;
@@ -114,7 +115,9 @@ class _PlaylistPageState extends State<PlaylistPage> {
                       icon: Icon(Icons.shuffle_rounded, size: 30, color: Colors.white70),
                       onPressed: () {},
                     ),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.play_circle_rounded, size: 64, color: getToggledColor())),
+                    IconButton(icon: Icon(Icons.play_circle_rounded, size: 64, color: getToggledColor()), onPressed: () {
+                      playbackController.setPlaylist(playlist, null);
+                    }),
                   ],
                 );
               }
@@ -180,7 +183,7 @@ class _PlaylistPageState extends State<PlaylistPage> {
                         index: playlist.songs.indexOf(song),
                         onPlay: () {
                           print("Play song: ${song.title}");
-                          PlaybackController().song(song);
+                          playbackController.setPlaylist(playlist, song);
                         }
                     )
                 ),

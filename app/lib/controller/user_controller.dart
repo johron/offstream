@@ -6,6 +6,7 @@ import 'package:peik/util/util.dart';
 
 import '../type/page.dart';
 import '../type/playlist_data.dart';
+import '../type/song_data.dart';
 import '../type/stream_data.dart';
 import '../type/user_data.dart';
 
@@ -118,6 +119,19 @@ class UserController {
 
     await updateUser(updatedUser);
     return;
+  }
+
+  Future<SongData?> getSongFromUUID(String songUUID) async {
+    var stream = await storage.loadStream();
+    if (stream == null) {
+      return null;
+    }
+
+    try {
+      return stream.songs.firstWhere((s) => s.uuid == songUUID);
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<void> updateUser(UserData updatedUser) async {

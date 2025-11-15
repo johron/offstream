@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:peik/component/rounded.dart';
 import 'package:peik/controller/playback_controller.dart';
+import 'package:peik/controller/user_controller.dart';
 import 'package:peik/util/color.dart';
 import 'package:peik/util/time.dart';
 import 'package:peik/util/util.dart';
@@ -14,27 +15,34 @@ class Multimedia extends StatefulWidget {
 }
 
 class _MultimediaState extends State<Multimedia> {
-  final PlaybackController _controller = PlaybackController();
+  final PlaybackController playbackController = PlaybackController();
+  final UserController userController = UserController();
 
   @override
   void initState() {
     super.initState();
-    _controller.onPlaybackStateChanged.listen((event) {
+    playbackController.onPlaybackStateChanged.listen((event) {
       updateState();
     });
-    _controller.onShuffleChanged.listen((event) {
+    playbackController.onShuffleChanged.listen((event) {
       updateState();
     });
-    _controller.onRepeatChanged.listen((event) {
+    playbackController.onRepeatChanged.listen((event) {
       updateState();
     });
-    _controller.onPositionChanged.listen((event) {
+    playbackController.onPositionChanged.listen((event) {
       updateState();
     });
-    _controller.onCurrentSongChanged.listen((event) {
+    playbackController.onVolumeChanged.listen((event) {
       updateState();
     });
-    _controller.onVolumeChanged.listen((event) {
+    playbackController.onQueueChanged.listen((event) {
+      updateState();
+    });
+    playbackController.onCurrentPlaylistChanged.listen((event) {
+      updateState();
+    });
+    playbackController.onPlaybackIndexChanged.listen((event) {
       updateState();
     });
 
@@ -42,11 +50,13 @@ class _MultimediaState extends State<Multimedia> {
   }
 
   void updateState() {
+    if (!mounted) return;
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    var currentSong = playbackController.currentSong;
     return BottomAppBar(
       height: 100,
       color: Colors.grey[900],
@@ -54,7 +64,7 @@ class _MultimediaState extends State<Multimedia> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
-            child: _controller.currentSong == null ? Container(
+            child: currentSong == null ? Container(
               alignment: Alignment.centerLeft,
               child: ListTile(
                 leading: Rounded(child: Image.network(getMissingAlbumArtPath())),
@@ -64,8 +74,8 @@ class _MultimediaState extends State<Multimedia> {
               child: ListTile(
                 //leading: Rounded(child: Image.network(_controller.currentSong!.albumArtPath)),
                 leading: Rounded(child: Image.network(getMissingAlbumArtPath())),
-                title: Text(_controller.currentSong!.title, overflow: TextOverflow.ellipsis),
-                subtitle: Text(_controller.currentSong!.artist, overflow: TextOverflow.ellipsis),
+                title: Text(currentSong!.title, overflow: TextOverflow.ellipsis),
+                subtitle: Text(currentSong!.artist, overflow: TextOverflow.ellipsis),
                 trailing: IconButton(icon: Icon(Icons.favorite), onPressed: () {
 
                 }),
@@ -80,39 +90,39 @@ class _MultimediaState extends State<Multimedia> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.shuffle_rounded),
-                    color: _controller.isShuffling ? getToggledColor() : null,
+                    color: playbackController.isShuffling ? getToggledColor() : null,
                     onPressed: () {
-                      if (_controller.currentSong == null) return;
-                      _controller.shuffle();
+                      if (currentSong == null) return;
+                      playbackController.shuffle();
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.skip_previous_rounded),
                     onPressed: () {
-                      if (_controller.currentSong == null) return;
-                      _controller.previous();
+                      if (currentSong == null) return;
+                      playbackController.previous();
                     },
                   ),
                   IconButton(
-                    icon: _controller.state == PlaybackState.playing ? Icon(Icons.pause_rounded) : Icon(Icons.play_arrow_rounded),
+                    icon: playbackController.state == PlaybackState.playing ? Icon(Icons.pause_rounded) : Icon(Icons.play_arrow_rounded),
                     onPressed: () {
-                      if (_controller.currentSong == null) return;
-                      _controller.play();
+                      if (currentSong == null) return;
+                      playbackController.play();
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.skip_next_rounded),
                     onPressed: () {
-                      if (_controller.currentSong == null) return;
-                      _controller.next();
+                      if (currentSong == null) return;
+                      playbackController.next();
                     },
                   ),
                   IconButton(
                     icon: Icon(Icons.repeat_rounded),
-                    color: _controller.isRepeating ? getToggledColor() : null,
+                    color: playbackController.isRepeating ? getToggledColor() : null,
                     onPressed: () {
-                      if (_controller.currentSong == null) return;
-                      _controller.repeat();
+                      if (currentSong == null) return;
+                      playbackController.repeat();
                     },
                   ),
                 ]
@@ -122,22 +132,22 @@ class _MultimediaState extends State<Multimedia> {
                 direction: Axis.horizontal,
                 spacing: 10,
                 children: [
-                  Text(formatDuration(_controller.position)),
+                  Text(formatDuration(Duration(milliseconds: (playbackController.position / 1000).round()))),
                   Expanded(child: SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       thumbShape: SliderComponentShape.noThumb,
                       overlayShape: SliderComponentShape.noThumb,
                     ),
                     child: Slider(
-                      value: _controller.currentSong == null ? 0 : getSongDurationValue(_controller.position.inSeconds, _controller.currentSong!.duration.inSeconds),
+                      value: currentSong == null ? 0 : getSongDurationValue(playbackController.position, currentSong.duration.inMilliseconds * 1000),
                       onChanged: (value) {
-                        if (_controller.currentSong == null) return;
-                        _controller.seek(multiplyDuration(Duration(seconds: _controller.currentSong?.duration.inSeconds ?? 0), value));
+                        if (currentSong == null) return;
+                        playbackController.seek(multiplyDuration(currentSong.duration, value).inMilliseconds * 1000);
                       },
                     )
                   )),
                   //Text(formatDuration(_controller.currentSong == null ? Duration.zero : Duration(seconds: _controller.currentSong!.duration.inSeconds))),
-                  Text(formatDuration(_controller.currentSong?.duration ?? Duration.zero)),
+                  Text(formatDuration(currentSong?.duration ?? Duration.zero)),
                 ],
               )),
             ]
@@ -160,9 +170,9 @@ class _MultimediaState extends State<Multimedia> {
                   },
                 ),
                 IconButton(
-                  icon: Icon(_controller.isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded),
+                  icon: Icon(playbackController.isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded),
                   onPressed: () {
-                    _controller.mute();
+                    playbackController.mute();
                     updateState();
                   },
                 ),
@@ -175,10 +185,10 @@ class _MultimediaState extends State<Multimedia> {
                       overlayShape: SliderComponentShape.noThumb,
                     ),
                     child: Slider(
-                      value: _controller.isMuted ? 0 : _controller.currentVolume,
+                      value: playbackController.isMuted ? 0 : playbackController.currentVolume,
                       max: 1,
                       onChanged: (value) {
-                          _controller.volume(value);
+                          playbackController.volume(value);
                       },
                     )
                   )

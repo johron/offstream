@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:just_audio/just_audio.dart';
 import 'package:peik/controller/storage_controller.dart';
+import 'package:peik/controller/user_controller.dart';
 import 'package:peik/type/playlist_data.dart';
 import 'package:peik/type/song_data.dart';
 
@@ -25,39 +26,64 @@ class PlaybackController {
   PlaybackState _state = PlaybackState.stopped;
   bool _shuffle = false;
   bool _repeat = false;
-  Duration _position = Duration.zero;
-  SongData? _currentSong;
+  double _position = 0;
   double _volume = 0.7;
   bool _muted = false;
+  List<String> _queue = [];
+  List<String>? _playlistQueue;
+  int _playbackIndex = 0;
+  SongData? _currentSong;
 
   PlaybackState get state => _state;
   bool get isShuffling => _shuffle;
   bool get isRepeating => _repeat;
-  Duration get position => _position;
-  SongData? get currentSong => _currentSong;
+  double get position => _position;
   double get currentVolume => _volume;
   bool get isMuted => _muted;
+  List<String> get queue => _queue;
+  List<String>? get playlistQueue => _playlistQueue;
+  int get playbackIndex => _playbackIndex;
+  SongData? get currentSong => _currentSong;
 
   final _playbackStateController = StreamController<PlaybackState>.broadcast();
-  final _currentSongController = StreamController<SongData?>.broadcast();
-  final _currentPlaylistController = StreamController<PlaylistData?>.broadcast();
   final _shuffleController = StreamController<bool>.broadcast();
   final _repeatController = StreamController<bool>.broadcast();
-  final _positionController = StreamController<Duration>.broadcast();
+  final _positionController = StreamController<double>.broadcast();
   final _volumeController = StreamController<double>.broadcast();
+  final _queueController = StreamController<List<String>>.broadcast();
+  final _playlistQueueController = StreamController<List<String>?>.broadcast();
+  final _playbackIndexController = StreamController<int>.broadcast();
 
   Stream<PlaybackState> get onPlaybackStateChanged => _playbackStateController.stream;
-  Stream<SongData?> get onCurrentSongChanged => _currentSongController.stream;
-  Stream<PlaylistData?> get onCurrentPlaylistChanged => _currentPlaylistController.stream;
   Stream<bool> get onShuffleChanged => _shuffleController.stream;
   Stream<bool> get onRepeatChanged => _repeatController.stream;
-  Stream<Duration> get onPositionChanged => _positionController.stream;
+  Stream<double> get onPositionChanged => _positionController.stream;
   Stream<double> get onVolumeChanged => _volumeController.stream;
+  Stream<List<String>> get onQueueChanged => _queueController.stream;
+  Stream<List<String>?> get onCurrentPlaylistChanged => _playlistQueueController.stream;
+  Stream<int> get onPlaybackIndexChanged => _playbackIndexController.stream;
 
   void init() {
     _player.positionStream.listen((pos) {
-      _position = pos;
+      _position = pos.inMilliseconds.toDouble() * 1000;
       _positionController.add(_position);
+
+      // handle track end
+      if (_position >= _player.duration!.inMilliseconds.toDouble() * 1000) {
+        print("Track ended");
+        if (_playlistQueue != null && _playbackIndex < getPlaybackQueue().length - 1) {
+          _playbackIndex++;
+          _playbackIndexController.add(_playbackIndex);
+          _loadSong();
+        } else if (_repeat) {
+          _playbackIndex = 0;
+          _playbackIndexController.add(_playbackIndex);
+          _loadSong();
+        } else {
+          _state = PlaybackState.stopped;
+          _playbackStateController.add(_state);
+        }
+      }
     });
   }
 
@@ -95,35 +121,69 @@ class PlaybackController {
     _player.seek(Duration.zero);
   }
 
-  void seek(Duration position) {
+  void seek(double position) {
     _position = position;
     _positionController.add(_position);
 
-    _player.seek(position);
+    _player.seek(Duration(milliseconds: (_position / 1000).round()));
 
     print("Seeking to position: $_position");
   }
 
-  void song(SongData song) {
-    StorageController().getSongFilePath(song.uuid).then((filePath) {
-      _player.setFilePath(filePath);
+  List<String> getPlaybackQueue() {
+    return _queue + (playlistQueue ?? []);
+  }
 
-      _currentSong = song;
-      _currentSongController.add(_currentSong);
+  void _loadSong() {
+    var uuid = getPlaybackQueue()[_playbackIndex];
+    StorageController().getSongFilePath(uuid).then((filePath) async {
+      _player.setFilePath(filePath);
 
       _state = PlaybackState.playing;
       _playbackStateController.add(_state);
 
-      seek(Duration.zero);
+      _currentSong = await UserController().getSongFromUUID(uuid);
 
-      _player.play();
-
-      print("Changing current song to: ${song.title}");
+      seek(0);
     });
   }
 
-  // void add_queue(SongData song) {}
-  // void set_playlist(PlaylistData playlist) {}
+  void addQueue(SongData song) {
+    _queue.add(song.uuid);
+    _queueController.add(_queue);
+
+    if (_queue.length == 1) {
+      _playbackIndex = 0;
+      _loadSong();
+    }
+
+    print(_queue);
+    print(_playlistQueue);
+    print("Adding song to queue: ${song.title}");
+  }
+
+  void setPlaylist(PlaylistData playlist, SongData? startSong) {
+    _playlistQueue = playlist.songs.map((song) => song.uuid).toList();
+
+    if (startSong != null) {
+      // move startSong to the front of the playlist queue
+      _playlistQueue!.remove(startSong.uuid);
+      _playlistQueue!.insert(0, startSong.uuid);
+      _playbackIndex = 0;
+      _loadSong();
+      play();
+    }
+
+    if (playlist.songs.isEmpty) {
+      _playlistQueue = null;
+    }
+
+    _playlistQueueController.add(_playlistQueue);
+    print(_queue);
+    print(_playlistQueue);
+
+    print("Setting current playlist to: ${playlist.title}");
+  }
 
   void volume(double vol) {
     _volume = vol;
@@ -146,10 +206,13 @@ class PlaybackController {
 
   void dispose() {
     _playbackStateController.close();
-    _currentSongController.close();
-    _currentPlaylistController.close();
     _shuffleController.close();
     _repeatController.close();
     _positionController.close();
+    _volumeController.close();
+    _queueController.close();
+    _playlistQueueController.close();
+    _playbackIndexController.close();
+    _player.dispose();
   }
 }
