@@ -129,14 +129,15 @@ class _MultimediaState extends State<Multimedia> {
                       overlayShape: SliderComponentShape.noThumb,
                     ),
                     child: Slider(
-                      value: _controller.currentSong == null ? 0 : _controller.position.inSeconds/_controller.duration(),
+                      value: _controller.currentSong == null ? 0 : getSongDurationValue(_controller.position.inSeconds, _controller.currentSong!.duration.inSeconds),
                       onChanged: (value) {
                         if (_controller.currentSong == null) return;
-                        _controller.seek(multiplyDuration(_controller.durationDuration, value));
+                        _controller.seek(multiplyDuration(Duration(seconds: _controller.currentSong?.duration.inSeconds ?? 0), value));
                       },
                     )
                   )),
-                  Text(formatDuration(_controller.currentSong == null ? Duration.zero : _controller.durationDuration)),
+                  //Text(formatDuration(_controller.currentSong == null ? Duration.zero : Duration(seconds: _controller.currentSong!.duration.inSeconds))),
+                  Text(formatDuration(_controller.currentSong?.duration ?? Duration.zero)),
                 ],
               )),
             ]

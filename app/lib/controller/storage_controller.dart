@@ -10,6 +10,8 @@ import 'package:peik/type/local_store.dart';
 import 'package:peik/type/song_data.dart';
 import 'package:peik/type/stream_data.dart';
 import 'package:peik/util/constants.dart';
+import 'package:peik/util/ffmpeg.dart';
+import 'package:process_run/process_run.dart';
 
 import '../type/user_data.dart';
 
@@ -195,6 +197,18 @@ class StorageController {
         return false;
       }
     }
+
+    // precalculate duration with ffprobe
+    var duration = await getDuration(await getSongFilePath(song.uuid));
+
+    song = SongData(
+      uuid: song.uuid,
+      title: song.title,
+      artist: song.artist,
+      album: song.album,
+      added: song.added,
+      duration: duration,
+    );
 
     var newStream = stream;
     newStream.songs.add(song);

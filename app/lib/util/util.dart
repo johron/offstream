@@ -96,3 +96,9 @@ Future<void> carefulShowDialog({required BuildContext context, required WidgetBu
     showDialog(context: context, builder: builder);
   }
 }
+
+double getSongDurationValue(int position, int total) {
+  if (total == 0) return 0;
+  var value = position / total;
+  return value;
+}

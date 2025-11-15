@@ -38,6 +38,9 @@ dependencies:
   media_kit_libs_windows_audio: ^1.0.9
   media_kit_libs_linux:
   file_picker: ^10.3.3
+  process_run: ^1.2.4
+  ffmpeg_kit_flutter_new: ^4.1.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

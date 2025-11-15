@@ -104,14 +104,6 @@ class PlaybackController {
     print("Seeking to position: $_position");
   }
 
-  int duration() {
-    return _player.duration?.inSeconds ?? 0;
-  }
-
-  Duration get durationDuration {
-    return _player.duration ?? Duration.zero;
-  }
-
   void song(SongData song) {
     StorageController().getSongFilePath(song.uuid).then((filePath) {
       _player.setFilePath(filePath);
@@ -129,6 +121,9 @@ class PlaybackController {
       print("Changing current song to: ${song.title}");
     });
   }
+
+  // void add_queue(SongData song) {}
+  // void set_playlist(PlaylistData playlist) {}
 
   void volume(double vol) {
     _volume = vol;
